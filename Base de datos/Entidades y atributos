@@ -1,0 +1,12 @@
+Entidades
+
+Jugador(noCuenta, nombre,apellido1,apellido2,fechaNacimiento,correo)
+Equipos(idEquipo, nombre, noJugadores,puntaje)
+Grupos(idGrupo, nombre)
+Torneo(idTorneo,nombre,disciplina,noEquipos,fechaInicio,fechaFin,noGrupos,porcentajeAvance)
+Juez(idJuez,noCuenta,nombre,apellido1,apellido2,fechaNacimiento,correo)
+Admin(noCuenta,nombre,apellido1,apellido2,fechaNacimiento,correo)
+usuarioConstraseña(nombreUsuario, contraseña)
+
+
+*Crear un usuario maestro para registrar SOLAMENTE a los jueces y a los admins
