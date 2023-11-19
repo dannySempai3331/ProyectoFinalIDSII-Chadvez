@@ -1,12 +1,19 @@
 Entidades
 
-Jugador(noCuenta, nombre,apellido1,apellido2,fechaNacimiento,correo)
-Equipos(idEquipo, nombre, noJugadores,puntaje)
-Grupos(idGrupo, nombre)
-Torneo(idTorneo,nombre,disciplina,noEquipos,fechaInicio,fechaFin,noGrupos,porcentajeAvance)
-Juez(idJuez,noCuenta,nombre,apellido1,apellido2,fechaNacimiento,correo)
-Admin(noCuenta,nombre,apellido1,apellido2,fechaNacimiento,correo)
-usuarioConstraseña(nombreUsuario, contraseña)
+Jugadores(noCuenta: cadena, nombre: cadena,apellido1: cadena,apellido2: cadena,fechaNacimiento: fecha,correo:: cadena)
+Equipos(idEquipo: entero, nombre: cadena, noJugadores: entero,puntaje:real)
+Grupos(idGrupo: entero, nombre: cadena)
+Torneos(idTorneo: entero,nombre: cadena,disciplina: cadena,noEquipos: entero,fechaInicio: fecha,fechaFin: fecha,noGrupos: entero,porcentajeAvance: real)
+Jueces(idJuez: entero,noCuenta: cadena,nombre: cadena,apellido1: cadena,apellido2: cadena,fechaNacimiento: fecha,correo: cadena)
+Admins(noCuenta: cadena,nombre: cadena,apellido1: cadena,apellido2: cadena,fechaNacimiento: fecha,correo: cadena)
+
+JugadorContraseña(noCuenta: cadena, nombreUsuario: cadena, contraseña: array de bytes)
+
+AdminContraseña(noCuenta: cadena, nombreUsuario: cadena, contraseña: array de bytes)
+
+JuezContraseña(noCuenta: cadena, nombreUsuario: cadena, contraseña: array de bytes)
+
+JugadoresEquipo(idJugador: cadena, idEquipo: entero)
 
 
 *Crear un usuario maestro para registrar SOLAMENTE a los jueces y a los admins
