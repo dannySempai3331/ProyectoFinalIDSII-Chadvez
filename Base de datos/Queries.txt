@@ -1,0 +1,65 @@
+
+--Tabla Torneos
+
+CREATE TABLE Torneos (
+    idTorneo SERIAL PRIMARY KEY,
+    nombre VARCHAR(30) NOT NULL,
+    disciplina VARCHAR(30) NOT NULL,
+    noEquipos INTEGER NOT NULL,
+    fechaInicio DATE NOT NULL,
+    fechaFin DATE,
+    noGrupos INTEGER NOT NULL,
+    porcentajeAvance NUMERIC(5,2) NOT NULL
+);
+
+--Tabla Grupos
+
+CREATE TABLE Grupos(
+    idGrupo SERIAL PRIMARY KEY,
+    nombre VARCHAR(30) NOT NULL,
+    torneo INTEGER NOT NULL,
+    FOREIGN KEY (torneo) REFERENCES Torneos(idTorneo)
+);
+
+--Tabla Equipos
+
+CREATE TABLE Equipos(
+    idEquipo SERIAL PRIMARY KEY,
+    nombre VARCHAR(30) NOT NULL,
+    noJugadores INTEGER NOT NULL,
+    puntaje INTEGER NOT NULL,
+    idGrupo INTEGER NOT NULL,
+    FOREIGN KEY (idGrupo) REFERENCES Grupos(idGrupo)
+);
+
+--Tabla Usuarios
+
+CREATE TABLE Usuarios(
+    idUsuario SERIAL PRIMARY KEY,
+    noCuenta VARCHAR(7) NOT NULL,
+    nombre VARCHAR(30) NOT NULL,
+    apellido1 VARCHAR(30) NOT NULL,
+    apellido2 VARCHAR(30),
+    fechaNacimiento DATE NOT NULL,
+    correo VARCHAR(50) NOT NULL,
+    tipoUsuario VARCHAR(30) NOT NULL
+);
+
+--Tabla UsuarioContrasenna
+
+CREATE TABLE UsuarioContrasenna(
+    idUsuario SERIAL PRIMARY KEY,
+    nombreUsuario VARCHAR(30) NOT NULL,
+    contrasenna VARCHAR(30) NOT NULL,
+    FOREIGN KEY (idUsuario) REFERENCES Usuarios(idUsuario)
+);
+
+--Tabla JugadoresEquipo
+
+CREATE TABLE JugadoresEquipo(
+    idJugador INTEGER NOT NULL,
+    idEquipo INTEGER NOT NULL,
+    PRIMARY KEY (idJugador, idEquipo),
+    FOREIGN KEY (idJugador) REFERENCES Usuarios(idUsuario),
+    FOREIGN KEY (idEquipo) REFERENCES Equipos(idEquipo)
+);
