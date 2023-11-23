@@ -48,7 +48,7 @@ CREATE TABLE Usuarios(
 --Tabla UsuarioContrasenna
 
 CREATE TABLE UsuarioContrasenna(
-    idUsuario SERIAL PRIMARY KEY,
+    idUsuario INTEGER PRIMARY KEY,
     nombreUsuario VARCHAR(30) NOT NULL,
     contrasenna VARCHAR(30) NOT NULL,
     FOREIGN KEY (idUsuario) REFERENCES Usuarios(idUsuario)
