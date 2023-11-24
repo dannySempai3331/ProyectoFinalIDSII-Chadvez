@@ -17,8 +17,16 @@ CREATE TABLE Torneos (
 CREATE TABLE Grupos(
     idGrupo SERIAL PRIMARY KEY,
     nombre VARCHAR(30) NOT NULL,
-    torneo INTEGER NOT NULL,
-    FOREIGN KEY (torneo) REFERENCES Torneos(idTorneo)
+);
+
+--Tabla GruposTorneos
+
+CREATE TABLE GruposTorneos(
+    idGrupo INTEGER NOT NULL,
+    idTorneo INTEGER NOT NULL,
+    PRIMARY KEY (idGrupo, idTorneo)
+    FOREIGN KEY (idGrupo) REFERENCES Grupos(idGrupo),
+    FOREIGN KEY (idTorneo) REFERENCES Torneos(idTorneo)
 );
 
 --Tabla Equipos
