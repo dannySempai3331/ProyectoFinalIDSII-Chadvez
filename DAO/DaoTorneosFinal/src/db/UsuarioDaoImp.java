@@ -4,12 +4,10 @@ import dao.UsuarioDao;
 import dtos.Usuario;
 import errores.PersistenciaException;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 public class UsuarioDaoImp implements UsuarioDao {
 
@@ -47,7 +45,7 @@ public class UsuarioDaoImp implements UsuarioDao {
                     usuario.setApellido2("-");
                 }
 
-                usuario.setFechaNacimiento(rs.getDate("fechanacimiento"));
+                usuario.setFechaNacimiento(rs.getDate("fechanacimiento").toLocalDate());
                 usuario.setCorreo(rs.getString("correo"));
                 usuario.setTipoUsuario(rs.getString("tipousuario"));
                 usuario.setNombreUsuario(rs.getString("nombreusuario"));
@@ -66,8 +64,48 @@ public class UsuarioDaoImp implements UsuarioDao {
     }
 
     @Override
-    public Usuario createUsuario(Usuario usuario) {
-        return null;
+    public boolean createUsuario(Usuario usuario) {
+
+        PreparedStatement ps;
+        String queryCreate ="INSERT INTO usuarios ";
+        String chain1 = "(";
+        String chain2 = "";
+        Map<String, Object> datosUsuario = getAtributosFromUsuario(usuario);
+
+        for(Map.Entry<String,Object> map : datosUsuario.entrySet()){
+            chain1 += map.getKey() + ", ";
+        }
+
+        chain1 = chain1.substring(0,chain1.length()-2) + ")";
+        System.out.println(chain1);
+        queryCreate = queryCreate + chain1 + " VALUES(";
+        System.out.println(queryCreate);
+
+        for(Map.Entry<String,Object> map : datosUsuario.entrySet()){
+            Object value = map.getValue();
+
+            if (value instanceof String){
+                chain2 += "'"+value.toString()+"', ";
+            } else if (value instanceof LocalDate) {
+                chain2 += "'" + value.toString() + "', ";
+            } else {
+                chain2 += value.toString()+", ";
+            }
+        }
+
+        queryCreate = queryCreate + chain2.substring(0,chain2.length()-2) + ")";
+        System.out.println(queryCreate);
+
+        try {
+            ps = this.connection.prepareStatement(queryCreate);
+            ps.executeUpdate();
+            ps.close();
+            this.connection.close();
+            return true;
+
+        } catch (SQLException e) {
+            throw new PersistenciaException(e);
+        }
     }
 
     @Override
@@ -98,5 +136,72 @@ public class UsuarioDaoImp implements UsuarioDao {
     @Override
     public int getIdByNoCuenta(String noCuenta) {
         return 0;
+    }
+
+    private Map<String,Object> getAtributosFromUsuario(Usuario u){
+
+        Map<String, Object> resultado = new HashMap<String, Object>();
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        LocalDate date = u.getFechaNacimiento();
+        String val = u.getNoCuenta();
+
+        /*
+        try {
+            date = formato.parse(u.getFechaNacimiento().toString());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }*/
+
+        if (val != null){
+            resultado.put("nocuenta",val);
+        }
+
+        val = u.getNombre();
+
+        if (val != null){
+            resultado.put("nombre",val);
+        }
+
+        val = u.getApellido1();
+
+        if (val != null){
+            resultado.put("apellido1",val);
+        }
+
+        val = u.getApellido2();
+
+        if (val != null){
+            resultado.put("apellido2",val);
+        }
+
+        if (date != null){
+            resultado.put("fechanacimiento",date);
+        }
+
+        val = u.getCorreo();
+
+        if (val != null){
+            resultado.put("correo",val);
+        }
+
+        val = u.getTipoUsuario();
+
+        if (val != null){
+            resultado.put("tipousuario",val);
+        }
+
+        val = u.getNombreUsuario();
+
+        if (val != null){
+            resultado.put("nombreusuario",val);
+        }
+
+        val = u.getContrasenna();
+
+        if (val != null){
+            resultado.put("contrasenna",val);
+        }
+
+        return resultado;
     }
 }

@@ -9,7 +9,7 @@ public interface UsuarioDao {
     //obtener todos los usuarios
     List<Usuario> getAllUsers();
     //crear un usuario
-    Usuario createUsuario(Usuario usuario);
+    boolean createUsuario(Usuario usuario);
     //modificar info de un usuario
     Usuario modifyUsuario(Usuario usuario);
     //eliminar usuario

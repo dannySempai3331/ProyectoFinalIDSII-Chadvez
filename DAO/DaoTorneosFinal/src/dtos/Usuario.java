@@ -1,6 +1,6 @@
 package dtos;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Usuario {
 
@@ -9,7 +9,7 @@ public class Usuario {
     private String nombre;
     private String apellido1;
     private String apellido2;
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String correo;
     private String tipoUsuario;
     private String nombreUsuario;
@@ -58,11 +58,11 @@ public class Usuario {
         this.apellido2 = apellido2;
     }
 
-    public Date getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
