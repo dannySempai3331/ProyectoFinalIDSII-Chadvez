@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Usuario {
 
+    private int idUsuario;
     private String noCuenta;
     private String nombre;
     private String apellido1;
@@ -15,6 +16,14 @@ public class Usuario {
     private String contrasenna;
 
     public Usuario() {
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getNoCuenta() {
@@ -88,4 +97,20 @@ public class Usuario {
     public void setContrasenna(String contrasenna) {
         this.contrasenna = contrasenna;
     }
-}               // hola
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "idUsuario=" + idUsuario +
+                ", noCuenta='" + noCuenta + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellido1='" + apellido1 + '\'' +
+                ", apellido2='" + apellido2 + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                ", correo='" + correo + '\'' +
+                ", tipoUsuario='" + tipoUsuario + '\'' +
+                ", nombreUsuario='" + nombreUsuario + '\'' +
+                ", contrasenna='" + contrasenna + '\'' +
+                '}';
+    }
+}
