@@ -11,7 +11,7 @@ public interface UsuarioDao {
     //crear un usuario
     boolean createUsuario(Usuario usuario);
     //modificar info de un usuario
-    Usuario modifyUsuario(Usuario usuario);
+    boolean modifyUsuario(Usuario usuario);
     //eliminar usuario
     void deleteUsuario(Usuario usuario);
     //obtener por id

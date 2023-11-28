@@ -70,6 +70,7 @@ public class UsuarioDaoImp implements UsuarioDao {
         String queryCreate ="INSERT INTO usuarios ";
         String chain1 = "(";
         String chain2 = "";
+        boolean wasCreated = false;
         Map<String, Object> datosUsuario = getAtributosFromUsuario(usuario);
 
         for(Map.Entry<String,Object> map : datosUsuario.entrySet()){
@@ -77,18 +78,15 @@ public class UsuarioDaoImp implements UsuarioDao {
         }
 
         chain1 = chain1.substring(0,chain1.length()-2) + ")";
-        System.out.println(chain1);
         queryCreate = queryCreate + chain1 + " VALUES(";
-        System.out.println(queryCreate);
 
         for(Map.Entry<String,Object> map : datosUsuario.entrySet()){
             Object value = map.getValue();
 
-            if (value instanceof String){
-                chain2 += "'"+value.toString()+"', ";
-            } else if (value instanceof LocalDate) {
-                chain2 += "'" + value.toString() + "', ";
-            } else {
+            if ((value instanceof String)||(value instanceof LocalDate)){
+                chain2 += "'" + value.toString()+ "', ";
+            }
+            else {
                 chain2 += value.toString()+", ";
             }
         }
@@ -101,7 +99,9 @@ public class UsuarioDaoImp implements UsuarioDao {
             ps.executeUpdate();
             ps.close();
             this.connection.close();
-            return true;
+            wasCreated = true;
+
+            return wasCreated;
 
         } catch (SQLException e) {
             throw new PersistenciaException(e);
@@ -109,8 +109,40 @@ public class UsuarioDaoImp implements UsuarioDao {
     }
 
     @Override
-    public Usuario modifyUsuario(Usuario usuario) {
-        return null;
+    public boolean modifyUsuario(Usuario usuario) {
+        PreparedStatement ps;
+        String queryUpdate = "UPDATE usuarios SET ";
+        String chain1 = "";
+        Map<String,Object> update;
+        Usuario u;
+
+        if(usuario.getIdUsuario() != 0){
+            update = getAtributosFromUsuario(usuario);
+
+            for (Map.Entry<String, Object> map : update.entrySet()){
+
+                if ((map.getValue() instanceof String)||(map.getValue() instanceof LocalDate)){
+                    chain1 += map.getKey() + " = '" + map.getValue() + "', ";
+                }
+                else {
+                    chain1 += map.getKey() + " = " + map.getValue() + ", ";
+                }
+            }
+        }
+
+        queryUpdate = queryUpdate + chain1.substring(0,chain1.length()-2) + "WHERE idusuario = " + usuario.getIdUsuario();
+
+        try {
+            ps = this.connection.prepareStatement(queryUpdate);
+            ps.executeUpdate();
+
+            ps.close();
+            this.connection.close();
+            return true;
+
+        }catch (SQLException e){
+            throw new PersistenciaException(e);
+        }
     }
 
     @Override
@@ -144,13 +176,6 @@ public class UsuarioDaoImp implements UsuarioDao {
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         LocalDate date = u.getFechaNacimiento();
         String val = u.getNoCuenta();
-
-        /*
-        try {
-            date = formato.parse(u.getFechaNacimiento().toString());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }*/
 
         if (val != null){
             resultado.put("nocuenta",val);
