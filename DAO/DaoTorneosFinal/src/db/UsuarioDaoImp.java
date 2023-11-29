@@ -101,11 +101,11 @@ public class UsuarioDaoImp implements UsuarioDao {
             this.connection.close();
             wasCreated = true;
 
-            return wasCreated;
-
         } catch (SQLException e) {
             throw new PersistenciaException(e);
         }
+
+        return wasCreated;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class UsuarioDaoImp implements UsuarioDao {
         String queryUpdate = "UPDATE usuarios SET ";
         String chain1 = "";
         Map<String,Object> update;
-        Usuario u;
+        boolean wasModified = false;
 
         if(usuario.getIdUsuario() != 0){
             update = getAtributosFromUsuario(usuario);
@@ -138,21 +138,93 @@ public class UsuarioDaoImp implements UsuarioDao {
 
             ps.close();
             this.connection.close();
-            return true;
+
+            wasModified = true;
 
         }catch (SQLException e){
             throw new PersistenciaException(e);
         }
+
+        return wasModified;
     }
 
     @Override
-    public void deleteUsuario(Usuario usuario) {
+    public boolean deleteUsuario(Usuario usuario) {
+
+        PreparedStatement ps;
+        boolean wasDeleted = false;
+
+        try {
+
+            if (usuario.getIdUsuario() != 0) {
+
+                if (getById(usuario.getIdUsuario()) != null) {
+
+                    ps = this.connection.prepareStatement("DELETE FROM usuarios WHERE idusuario = ?");
+                    ps.setInt(1, usuario.getIdUsuario());
+
+                    ps.executeUpdate();
+                    ps.close();
+                    this.connection.close();
+                    wasDeleted = true;
+                }else {
+                    wasDeleted = false;
+                }
+            }
+
+        }catch (SQLException e){
+            throw new PersistenciaException(e);
+        }
+
+        return wasDeleted;
 
     }
 
     @Override
     public Usuario getById(int id) {
-        return null;
+        Usuario u = new Usuario();
+        PreparedStatement ps;
+        ResultSet rs;
+
+        try{
+
+            ps = this.connection.prepareStatement("SELECT * FROM usuarios WHERE idusuario = ? ");
+            ps.setInt(1,id);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                u.setIdUsuario(rs.getInt("idusuario"));
+                u.setNoCuenta(rs.getString("nocuenta"));
+                u.setNombre(rs.getString("nombre"));
+                u.setApellido1(rs.getString("apellido1"));
+
+                if(rs.getString("apellido2")!= null) {
+                    u.setApellido2(rs.getString("apellido2"));
+                }
+                else {
+                    u.setApellido2("-");
+                }
+
+                u.setFechaNacimiento(rs.getDate("fechanacimiento").toLocalDate());
+                u.setCorreo(rs.getString("correo"));
+                u.setTipoUsuario(rs.getString("tipousuario"));
+                u.setNombreUsuario(rs.getString("nombreusuario"));
+                u.setContrasenna(rs.getString("contrasenna"));
+            }
+
+            ps.close();
+            //this.connection.close();
+
+            if (checkAttributes(u)){
+                return u;
+            }
+            else {
+                return null;
+            }
+
+        }catch (SQLException e){
+            throw new PersistenciaException(e);
+        }
     }
 
     @Override
@@ -228,5 +300,25 @@ public class UsuarioDaoImp implements UsuarioDao {
         }
 
         return resultado;
+    }
+
+    private boolean checkAttributes(Usuario usuario){
+
+        if (
+                (usuario.getIdUsuario() != 0) &&
+                (usuario.getNoCuenta() != null) &&
+                (usuario.getNombre() != null) &&
+                (usuario.getApellido1() != null) &&
+                (usuario.getFechaNacimiento() != null) &&
+                (usuario.getCorreo() != null) &&
+                (usuario.getTipoUsuario() != null) &&
+                (usuario.getNombreUsuario() != null) &&
+                (usuario.getContrasenna() != null)){
+
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

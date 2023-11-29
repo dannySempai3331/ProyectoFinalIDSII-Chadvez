@@ -15,6 +15,10 @@ public class EquipoDaoImp implements EquipoDao {
         // Inicializar la conexión a la base de datos si es necesario
     }
 
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public List<Equipo> getAllEquipos() {
         List<Equipo> todos = new ArrayList<>();

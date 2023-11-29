@@ -13,7 +13,7 @@ public interface UsuarioDao {
     //modificar info de un usuario
     boolean modifyUsuario(Usuario usuario);
     //eliminar usuario
-    void deleteUsuario(Usuario usuario);
+    boolean deleteUsuario(Usuario usuario);
     //obtener por id
     Usuario getById(int id);
     //obtener por noCuenta

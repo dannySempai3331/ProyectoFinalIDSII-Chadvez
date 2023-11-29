@@ -10,6 +10,28 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+/*
+* Proyecto entrega dia del ordinario
+
+Examen teorico viernes de 07 a 23 hrs
+
+Los nombres de los integrantes deben estar en todas las clases
+
+Lo puede subir solo uno (recomendacion subirlo todos).
+
+Mandar los queries de la BD.
+
+* Fecha del ordinario 11 de diciembre a las 11 am
+*
+Documentacion en la rubrica.
+*
+* java -jar ruta/lib/derbyrun.jar server start
+*
+oracle
+bd2 (ibm)
+
+* */
+
 public class Main {
     public static void main(String[] args) {
 
@@ -26,7 +48,13 @@ public class Main {
             connection = DriverManager.getConnection(url,user,password);
 
             UsuarioDaoImp.setConnection(connection);
+            Usuario u = new Usuario();
+            u.setIdUsuario(4);
+            System.out.println(UsuarioDaoImp.deleteUsuario(u));
 
+
+
+            /*
             Usuario u = new Usuario();
             u.setIdUsuario(5);
             u.setCorreo("andy123@mail.com");
@@ -35,7 +63,9 @@ public class Main {
             System.out.println(UsuarioDaoImp.modifyUsuario(u));
 
 
-            /*
+
+
+
             Usuario u = new Usuario();
             LocalDate fechaEspecifica = LocalDate.of(2022, 12, 31);
             u.setNoCuenta("12345");
