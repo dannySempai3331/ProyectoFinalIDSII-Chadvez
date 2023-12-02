@@ -4,7 +4,6 @@ import dao.UsuarioDao;
 import dtos.Usuario;
 import errores.PersistenciaException;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -178,52 +177,86 @@ public class UsuarioDaoImp implements UsuarioDao {
         PreparedStatement ps;
         ResultSet rs;
 
-        try{
+        if (checkIfExist(id)) {
 
-            ps = this.connection.prepareStatement("SELECT * FROM usuarios WHERE idusuario = ? ");
-            ps.setInt(1,id);
-            rs = ps.executeQuery();
+            try {
 
-            while (rs.next()){
-                u.setIdUsuario(rs.getInt("idusuario"));
-                u.setNoCuenta(rs.getString("nocuenta"));
-                u.setNombre(rs.getString("nombre"));
-                u.setApellido1(rs.getString("apellido1"));
+                ps = this.connection.prepareStatement("SELECT * FROM usuarios WHERE idusuario = ? ");
+                ps.setInt(1, id);
+                rs = ps.executeQuery();
 
-                if(rs.getString("apellido2")!= null) {
-                    u.setApellido2(rs.getString("apellido2"));
+                while (rs.next()) {
+                    u.setIdUsuario(rs.getInt("idusuario"));
+                    u.setNoCuenta(rs.getString("nocuenta"));
+                    u.setNombre(rs.getString("nombre"));
+                    u.setApellido1(rs.getString("apellido1"));
+
+                    if (rs.getString("apellido2") != null) {
+                        u.setApellido2(rs.getString("apellido2"));
+                    } else {
+                        u.setApellido2("-");
+                    }
+
+                    u.setFechaNacimiento(rs.getDate("fechanacimiento").toLocalDate());
+                    u.setCorreo(rs.getString("correo"));
+                    u.setTipoUsuario(rs.getString("tipousuario"));
+                    u.setNombreUsuario(rs.getString("nombreusuario"));
+                    u.setContrasenna(rs.getString("contrasenna"));
                 }
-                else {
-                    u.setApellido2("-");
-                }
-
-                u.setFechaNacimiento(rs.getDate("fechanacimiento").toLocalDate());
-                u.setCorreo(rs.getString("correo"));
-                u.setTipoUsuario(rs.getString("tipousuario"));
-                u.setNombreUsuario(rs.getString("nombreusuario"));
-                u.setContrasenna(rs.getString("contrasenna"));
-            }
-
-            ps.close();
-            this.connection.close();
-
-            if (checkAttributes(u)){
+                ps.close();
+                this.connection.close();
                 return u;
-            }
-            else {
-                return null;
-            }
 
-        }catch (SQLException e){
-            throw new PersistenciaException(e);
+            } catch (SQLException e) {
+                throw new PersistenciaException(e);
+            }
         }
+        return null;
     }
 
     @Override
     public Usuario getByNoCuenta(String noCuenta) {
+        Usuario u = new Usuario();
+        PreparedStatement ps;
+        ResultSet rs;
+
+        if (checkIfExist(noCuenta)){
+            try {
+
+                ps = this.connection.prepareStatement("SELECT * FROM usuarios WHERE nocuenta = ? ");
+                ps.setString(1, noCuenta);
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    u.setIdUsuario(rs.getInt("idusuario"));
+                    u.setNombre(rs.getString("nombre"));
+                    u.setApellido1(rs.getString("apellido1"));
+
+                    if (rs.getString("apellido2") != null) {
+                        u.setApellido2(rs.getString("apellido2"));
+                    } else {
+                        u.setApellido2("-");
+                    }
+
+                    u.setFechaNacimiento(rs.getDate("fechanacimiento").toLocalDate());
+                    u.setCorreo(rs.getString("correo"));
+                    u.setTipoUsuario(rs.getString("tipousuario"));
+                    u.setNombreUsuario(rs.getString("nombreusuario"));
+                    u.setContrasenna(rs.getString("contrasenna"));
+                }
+                ps.close();
+                this.connection.close();
+                return u;
+
+            } catch (SQLException e) {
+                throw new PersistenciaException(e);
+            }
+        }
         return null;
     }
 
+
+    //A discusion, ya despues veo si se implementa.
     @Override
     public Usuario getPersonalData(int id) {
         return null;
@@ -231,13 +264,28 @@ public class UsuarioDaoImp implements UsuarioDao {
 
     @Override
     public int getIdByNoCuenta(String noCuenta) {
-        return 0;
+        int id = 0;
+        PreparedStatement ps;
+        ResultSet rs;
+
+        try {
+            ps = this.connection.prepareStatement("SELECT idusuario FROM usuarios WHERE nocuenta = ?");
+            ps.setString(1, noCuenta);
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                id = rs.getInt(1);
+            }
+        }catch (SQLException e) {
+        throw new PersistenciaException(e);
+        }
+
+        return id;
     }
 
     private Map<String,Object> getAtributosFromUsuario(Usuario u){
 
         Map<String, Object> resultado = new HashMap<String, Object>();
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         LocalDate date = u.getFechaNacimiento();
         String val = u.getNoCuenta();
 
@@ -294,39 +342,46 @@ public class UsuarioDaoImp implements UsuarioDao {
         return resultado;
     }
 
-    private boolean checkAttributes(Usuario usuario){
-
-        return (usuario.getIdUsuario() != 0) &&
-                (usuario.getNoCuenta() != null) &&
-                (usuario.getNombre() != null) &&
-                (usuario.getApellido1() != null) &&
-                (usuario.getFechaNacimiento() != null) &&
-                (usuario.getCorreo() != null) &&
-                (usuario.getTipoUsuario() != null) &&
-                (usuario.getNombreUsuario() != null) &&
-                (usuario.getContrasenna() != null);
-    }
-
-    private boolean checkIfExist(int id){
+    public boolean checkIfExist(Object algo) {
         boolean isPresent = false;
         PreparedStatement ps;
         ResultSet rs;
 
-        try{
+        if (algo instanceof Integer) {
+            try {
 
-            ps = this.connection.prepareStatement("SELECT EXISTS (SELECT 1 FROM usuarios WHERE idusuario = ?)");
-            ps.setInt(1,id);
-            rs = ps.executeQuery();
+                ps = this.connection.prepareStatement("SELECT EXISTS (SELECT 1 FROM usuarios WHERE idusuario = ?)");
+                ps.setInt(1, (int) algo);
+                rs = ps.executeQuery();
 
-            if (rs.next()){
-                isPresent = rs.getBoolean(1);
+                if (rs.next()) {
+                    isPresent = rs.getBoolean(1);
+                }
+
+                ps.close();
+
+            } catch (SQLException e) {
+                throw new PersistenciaException(e);
             }
 
-            ps.close();
-            return isPresent;
+        } else if (algo instanceof String) {
+            try {
 
-        }catch (SQLException e){
-            throw new PersistenciaException(e);
+                ps = this.connection.prepareStatement("SELECT EXISTS (SELECT 1 FROM usuarios WHERE nocuenta = ?)");
+                ps.setString(1, algo.toString());
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    isPresent = rs.getBoolean(1);
+                }
+
+                ps.close();
+
+            } catch (SQLException e) {
+                throw new PersistenciaException(e);
+            }
         }
+        return isPresent;
     }
+
 }

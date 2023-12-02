@@ -49,8 +49,8 @@ public class Main {
 
             UsuarioDaoImp.setConnection(connection);
             Usuario u = new Usuario();
-            u.setIdUsuario(3);
-            System.out.println(UsuarioDaoImp.deleteUsuario(u));
+            u.setIdUsuario(5);
+            System.out.println(UsuarioDaoImp.getIdByNoCuenta("7654321"));
 
             /*
             Usuario u = new Usuario();
