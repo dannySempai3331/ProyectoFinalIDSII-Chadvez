@@ -49,10 +49,8 @@ public class Main {
 
             UsuarioDaoImp.setConnection(connection);
             Usuario u = new Usuario();
-            u.setIdUsuario(4);
+            u.setIdUsuario(3);
             System.out.println(UsuarioDaoImp.deleteUsuario(u));
-
-
 
             /*
             Usuario u = new Usuario();
@@ -61,10 +59,6 @@ public class Main {
             u.setNombreUsuario("farsa123");
 
             System.out.println(UsuarioDaoImp.modifyUsuario(u));
-
-
-
-
 
             Usuario u = new Usuario();
             LocalDate fechaEspecifica = LocalDate.of(2022, 12, 31);
@@ -79,9 +73,7 @@ public class Main {
             u.setContrasenna("dianaforever");
             System.out.println(UsuarioDaoImp.createUsuario(u));
 
-
             List<Usuario> u = UsuarioDaoImp.getAllUsers();
-
             //Iterar sobre la lista u e imprimir usuarios
             for (Usuario usuario : u) {
                 System.out.println(usuario);
@@ -89,7 +81,5 @@ public class Main {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
     }
 }

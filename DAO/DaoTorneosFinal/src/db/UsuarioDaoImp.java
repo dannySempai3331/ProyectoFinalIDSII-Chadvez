@@ -3,7 +3,6 @@ package db;
 import dao.UsuarioDao;
 import dtos.Usuario;
 import errores.PersistenciaException;
-
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -22,6 +21,7 @@ public class UsuarioDaoImp implements UsuarioDao {
 
     @Override
     public List<Usuario> getAllUsers() {
+
         Statement statement;
         ResultSet rs;
         Usuario usuario;
@@ -60,7 +60,6 @@ public class UsuarioDaoImp implements UsuarioDao {
         } catch (SQLException e) {
             throw new PersistenciaException(e);
         }
-
     }
 
     @Override
@@ -155,10 +154,8 @@ public class UsuarioDaoImp implements UsuarioDao {
         boolean wasDeleted = false;
 
         try {
-
             if (usuario.getIdUsuario() != 0) {
-
-                if (getById(usuario.getIdUsuario()) != null) {
+                if (checkIfExist(usuario.getIdUsuario())) {
 
                     ps = this.connection.prepareStatement("DELETE FROM usuarios WHERE idusuario = ?");
                     ps.setInt(1, usuario.getIdUsuario());
@@ -167,17 +164,12 @@ public class UsuarioDaoImp implements UsuarioDao {
                     ps.close();
                     this.connection.close();
                     wasDeleted = true;
-                }else {
-                    wasDeleted = false;
                 }
             }
-
         }catch (SQLException e){
             throw new PersistenciaException(e);
         }
-
         return wasDeleted;
-
     }
 
     @Override
@@ -213,7 +205,7 @@ public class UsuarioDaoImp implements UsuarioDao {
             }
 
             ps.close();
-            //this.connection.close();
+            this.connection.close();
 
             if (checkAttributes(u)){
                 return u;
@@ -304,8 +296,7 @@ public class UsuarioDaoImp implements UsuarioDao {
 
     private boolean checkAttributes(Usuario usuario){
 
-        if (
-                (usuario.getIdUsuario() != 0) &&
+        return (usuario.getIdUsuario() != 0) &&
                 (usuario.getNoCuenta() != null) &&
                 (usuario.getNombre() != null) &&
                 (usuario.getApellido1() != null) &&
@@ -313,12 +304,29 @@ public class UsuarioDaoImp implements UsuarioDao {
                 (usuario.getCorreo() != null) &&
                 (usuario.getTipoUsuario() != null) &&
                 (usuario.getNombreUsuario() != null) &&
-                (usuario.getContrasenna() != null)){
+                (usuario.getContrasenna() != null);
+    }
 
-            return true;
-        }
-        else {
-            return false;
+    private boolean checkIfExist(int id){
+        boolean isPresent = false;
+        PreparedStatement ps;
+        ResultSet rs;
+
+        try{
+
+            ps = this.connection.prepareStatement("SELECT EXISTS (SELECT 1 FROM usuarios WHERE idusuario = ?)");
+            ps.setInt(1,id);
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                isPresent = rs.getBoolean(1);
+            }
+
+            ps.close();
+            return isPresent;
+
+        }catch (SQLException e){
+            throw new PersistenciaException(e);
         }
     }
 }
