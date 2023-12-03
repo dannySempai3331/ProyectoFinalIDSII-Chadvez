@@ -316,6 +316,28 @@ public class UsuarioDaoImp implements UsuarioDao {
         return id;
     }
 
+    @Override
+    public LocalDate getFechaNacimiento(int id) {
+
+        PreparedStatement ps;
+        ResultSet rs;
+        LocalDate date = null;
+
+        try {
+            ps = this.connection.prepareStatement("SELECT fechanacimiento FROM usuarios WHERE idusuario = ?");
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                date = rs.getDate("fechanacimiento").toLocalDate();
+            }
+            return date;
+        }catch (SQLException e) {
+            throw new PersistenciaException(e);
+        }
+
+    }
+
     private Map<String,Object> getAtributosFromUsuario(Usuario u){
 
         Map<String, Object> resultado = new HashMap<String, Object>();

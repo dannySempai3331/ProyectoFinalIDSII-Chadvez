@@ -50,7 +50,7 @@ public class Main {
             UsuarioDaoImp.setConnection(connection);
             Usuario u = new Usuario();
             u.setIdUsuario(5);
-            System.out.println(UsuarioDaoImp.getPersonalData(2));
+            System.out.println(UsuarioDaoImp.getFechaNacimiento(2));
 
             /*
             Usuario u = new Usuario();
