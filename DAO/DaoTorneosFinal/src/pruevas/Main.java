@@ -1,5 +1,6 @@
 package pruevas;
 
+import db.JugadoresEquipoImp;
 import db.UsuarioDaoImp;
 import dtos.Usuario;
 
@@ -37,6 +38,7 @@ public class Main {
 
         Connection connection;
         UsuarioDaoImp UsuarioDaoImp = new UsuarioDaoImp();
+        JugadoresEquipoImp jei = new JugadoresEquipoImp();
 
         String url = "jdbc:postgresql://localhost:5432/torneos";
         String user = "postgres";
@@ -48,9 +50,10 @@ public class Main {
             connection = DriverManager.getConnection(url,user,password);
 
             UsuarioDaoImp.setConnection(connection);
+            jei.setConnection(connection);
             Usuario u = new Usuario();
             u.setIdUsuario(5);
-            System.out.println(UsuarioDaoImp.getFechaNacimiento(2));
+            System.out.println(jei.inscribirJugador(1,1));
 
             /*
             Usuario u = new Usuario();

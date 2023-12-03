@@ -90,7 +90,7 @@ public class UsuarioDaoImp implements UsuarioDao {
         }
 
         queryCreate = queryCreate + chain2.substring(0,chain2.length()-2) + ")";
-        System.out.println(queryCreate);
+        //System.out.println(queryCreate);
 
         try {
             ps = this.connection.prepareStatement(queryCreate);
