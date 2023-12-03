@@ -53,7 +53,7 @@ public class Main {
             jei.setConnection(connection);
             Usuario u = new Usuario();
             u.setIdUsuario(5);
-            System.out.println(jei.inscribirJugador(1,1));
+            System.out.println(jei.isEquipoFull(1));
 
             /*
             Usuario u = new Usuario();

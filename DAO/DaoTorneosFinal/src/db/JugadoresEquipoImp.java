@@ -5,6 +5,7 @@ import errores.PersistenciaException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class JugadoresEquipoImp implements JugadoresEquipoDao {
@@ -22,32 +23,100 @@ public class JugadoresEquipoImp implements JugadoresEquipoDao {
     public boolean inscribirJugador(int idJugador, int idEquipo) {
 
         PreparedStatement ps;
-        boolean wasRegistered;
+        boolean wasRegistered = false;
 
-        try{
-            ps = this.connection.prepareStatement("INSERT INTO jugadoresequipo (idjugador, idequipo) VALUES (?,?)");
-            ps.setInt(1, idJugador);
-            ps.setInt(2,idEquipo);
-            ps.executeUpdate();
-            ps.close();
-            this.connection.close();
-            wasRegistered = true;
+        if (!isEquipoFull(idEquipo)) {
 
-            /*Cual es la diferencia entre el try catch y poner la anotación en los métodos para lanzar excepciones?*/
+            try {
+                ps = this.connection.prepareStatement("INSERT INTO jugadoresequipo (idjugador, idequipo) VALUES (?,?)");
+                ps.setInt(1, idJugador);
+                ps.setInt(2, idEquipo);
+                ps.executeUpdate();
+                ps.close();
+                this.connection.close();
+                wasRegistered = true;
 
-        }catch (SQLException e){
-            throw new PersistenciaException(e);
+                /*Cual es la diferencia entre el try catch y poner la anotación en los métodos para lanzar excepciones?*/
+
+            } catch (SQLException e) {
+                throw new PersistenciaException(e);
+            }
         }
         return wasRegistered;
     }
 
     @Override
     public boolean darDeBajaJugador(int id) {
-        return false;
+        PreparedStatement ps;
+        boolean wasDeleted;
+
+        try{
+            ps = this.connection.prepareStatement("DELETE FROM jugadoresequipo WHERE idjugador = ?");
+            ps.setInt(1,id);
+            ps.executeUpdate();
+            ps.close();
+            this.connection.close();
+
+            wasDeleted = true;
+
+        }catch (SQLException e){
+            throw new PersistenciaException(e);
+            // Porque se hacen nuestras propias excepciones?
+        }
+        return wasDeleted;
     }
 
     @Override
     public boolean darDeBajaEquipo(int id) {
-        return false;
+        PreparedStatement ps;
+        boolean wasDeleted;
+
+        try {
+            ps = this.connection.prepareStatement("DELETE FROM jugadoresequipo WHERE idequipo = ?");
+            ps.setInt(1,id);
+            ps.executeUpdate();
+            ps.close();
+            this.connection.close();
+
+            wasDeleted = true;
+        }catch (SQLException e){
+            throw new PersistenciaException(e);
+        }
+        return wasDeleted;
+    }
+
+    public boolean isEquipoFull(int  idEquipo){
+
+        PreparedStatement ps;
+        ResultSet rs;
+        boolean isFull;
+        int r1 = 0,r2 = 0;
+
+        try{
+            ps = this.connection.prepareStatement("SELECT nojugadores FROM equipos WHERE idequipo = ?");
+            ps.setInt(1,idEquipo);
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                r1 = rs.getInt(1);
+                System.out.println(r1);
+            }
+
+            ps = this.connection.prepareStatement("SELECT COUNT(*) FROM jugadoresequipo WHERE idequipo = ?");
+            ps.setInt(1,idEquipo);
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                r2 = rs.getInt(1);
+                System.out.println(r2);
+            }
+
+            ps.close();
+
+            isFull = (r2 >= r1);
+        }catch (SQLException e){
+            throw new PersistenciaException(e);
+        }
+        return isFull;
     }
 }
