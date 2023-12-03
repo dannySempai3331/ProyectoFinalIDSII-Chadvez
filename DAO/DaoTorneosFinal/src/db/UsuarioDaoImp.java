@@ -259,7 +259,41 @@ public class UsuarioDaoImp implements UsuarioDao {
     //A discusion, ya despues veo si se implementa.
     @Override
     public Usuario getPersonalData(int id) {
-        return null;
+        Usuario usuario;
+        PreparedStatement ps;
+        ResultSet rs;
+
+        try{
+            ps = this.connection.prepareStatement("SELECT nocuenta, nombre, apellido1, apellido2, fechanacimiento, correo FROM usuarios WHERE idusuario = ?");
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+            usuario = new Usuario();
+            usuario.setIdUsuario(id);
+
+            while (rs.next()){
+                usuario.setNoCuenta(rs.getString("nocuenta"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setApellido1(rs.getString("apellido1"));
+
+                if (rs.getString("apellido2") != null) {
+                    usuario.setApellido2(rs.getString("apellido2"));
+                } else {
+                    usuario.setApellido2(null);
+                }
+
+                usuario.setFechaNacimiento(rs.getDate("fechanacimiento").toLocalDate());
+                usuario.setCorreo(rs.getString("correo"));
+
+            }
+            ps.close();
+            this.connection.close();
+
+        }catch (SQLException e){
+            throw new PersistenciaException(e);
+        }
+
+        return usuario;
     }
 
     @Override
@@ -279,7 +313,6 @@ public class UsuarioDaoImp implements UsuarioDao {
         }catch (SQLException e) {
         throw new PersistenciaException(e);
         }
-
         return id;
     }
 
