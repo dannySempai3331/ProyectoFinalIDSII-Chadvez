@@ -40,15 +40,19 @@ public class Main {
         UsuarioDaoImp UsuarioDaoImp = new UsuarioDaoImp();
         JugadoresEquipoImp jei = new JugadoresEquipoImp();
 
-        String url = "jdbc:postgresql://localhost:5432/torneos";
-        String user = "postgres";
-        String password = "megumin";
+        //String url = "jdbc:postgresql://localhost:5432/torneos";
+        //Derby
+        String url = "jdbc:derby://localhost:1527/TORNEODB;create=false";
+        //String user = "postgres";
+        //String password = "megumin";
+
 
 
         try {
-            Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(url,user,password);
-
+           // Class.forName("org.postgresql.Driver");
+           // connection = DriverManager.getConnection(url,user,password);
+            //Derby
+            connection=DriverManager.getConnection(url);
             UsuarioDaoImp.setConnection(connection);
             jei.setConnection(connection);
             Usuario u = new Usuario();
