@@ -65,7 +65,8 @@ public class GrupoDaoImp implements GrupoDao {
                 chain2 +=value.toString()+", ";
             }
         }
-        queryCreate=queryCreate + chain2.substring(0,chain2.length()-2) + ")";
+        queryCreate=queryCreate + chain2.substring(0,chain2.length()-1) + ")";
+        System.out.printf(queryCreate);
         try{
             ps = this.connection.prepareStatement(queryCreate);
             ps.executeUpdate();

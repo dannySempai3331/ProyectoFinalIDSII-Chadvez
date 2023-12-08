@@ -1,7 +1,9 @@
 package pruevas;
 
+import db.GrupoDaoImp;
 import db.JugadoresEquipoImp;
 import db.UsuarioDaoImp;
+import dtos.Grupo;
 import dtos.Usuario;
 
 import java.sql.Connection;
@@ -37,27 +39,33 @@ public class Main {
     public static void main(String[] args) {
 
         Connection connection;
-        UsuarioDaoImp UsuarioDaoImp = new UsuarioDaoImp();
+        UsuarioDaoImp usuarioDaoImp = new UsuarioDaoImp();
         JugadoresEquipoImp jei = new JugadoresEquipoImp();
 
-        //String url = "jdbc:postgresql://localhost:5432/torneos";
+        String url = "jdbc:postgresql://localhost:5432/torneos";
         //Derby
-        String url = "jdbc:derby://localhost:1527/TORNEODB;create=false";
-        //String user = "postgres";
-        //String password = "megumin";
-
-
+        //String url = "jdbc:derby://localhost:1527/TORNEODB;create=false";
+        String user = "postgres";
+        String password = "megumin";
 
         try {
            // Class.forName("org.postgresql.Driver");
-           // connection = DriverManager.getConnection(url,user,password);
+           connection = DriverManager.getConnection(url,user,password);
             //Derby
-            connection=DriverManager.getConnection(url);
-            UsuarioDaoImp.setConnection(connection);
-            jei.setConnection(connection);
+            //connection=DriverManager.getConnection(url);
+            //usuarioDaoImp.setConnection(connection);
+
+            GrupoDaoImp gdi = new GrupoDaoImp();
+            gdi.setConnection(connection);
+            /*jei.setConnection(connection);
             Usuario u = new Usuario();
             u.setIdUsuario(5);
-            System.out.println(jei.isEquipoFull(1));
+            System.out.println(jei.isEquipoFull(1));*/
+
+            Grupo g = new Grupo();
+            g.setNombre("futbol");
+
+            gdi.createGrupo(g);
 
             /*
             Usuario u = new Usuario();
