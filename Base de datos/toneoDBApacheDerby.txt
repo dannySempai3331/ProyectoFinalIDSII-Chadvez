@@ -1,0 +1,115 @@
+--Crear tablas en el siguiente orden
+
+--torneos
+--grupos
+--grupostorneos
+--equipos
+--jugadoresequipo
+--usuarios
+
+----------------------------------------------
+
+--TABLA TORNEOS
+CREATE TABLE Torneos (
+	idTorneo INT GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY,
+	nombre VARCHAR(30),
+	diciplina VARCHAR(30),
+	noEquipos INT NOT NULL,
+	fechaInicio DATE, 
+	fechaFin DATE,
+	porcentajeAvance NUMERIC(5,2),
+	noGrupos INT NOT NULL
+
+);
+
+INSERT INTO Torneos (nombre, diciplina, noEquipos, fechaInicio, fechaFin, porcentajeAvance, noGrupos) VALUES ('Torneo de Ejemplo', 'Fútbol', 10, '2023-01-01', '2023-02-01', 75.50, 2);
+
+----------------------------------------------
+
+
+--TABLA GRUPOS
+
+CREATE TABLE Grupos (
+    idGrupo INT GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY,
+    nombre VARCHAR(30) NOT NULL
+);
+
+
+
+INSERT INTO Grupos (nombre) VALUES ('Grupo A');
+
+
+----------------------------------------------
+
+--Tabla GruposTorneos
+
+CREATE TABLE GruposTorneos(
+    idGrupo INT NOT NULL,
+    idTorneo INT NOT NULL,
+    FOREIGN KEY (idGrupo) REFERENCES Grupos(idGrupo),
+    FOREIGN KEY (idTorneo) REFERENCES Torneos(idTorneo)
+);
+
+
+
+
+INSERT INTO GruposTorneo (idGrupo, idTorneo) VALUES (1, 1);
+
+----------------------------------------------
+
+--TABLA EQUIPOS
+
+CREATE TABLE Equipos (
+	
+	idEquipo INT GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY,
+	nombre VARCHAR(30),
+	noJugadores INT NOT NULL,
+	puntaje INT NOT NULL,
+	idGrupo INT NOT NULL,
+    	FOREIGN KEY (idGrupo) REFERENCES Grupos(idGrupo)
+);
+
+
+INSERT INTO Equipos (nombre, noJugadores, puntaje, idGrupo) VALUES ('Equipo A', 11, 100, 1);
+
+----------------------------------------------
+
+
+--TABLA JUGADORESEQUIPO
+CREATE TABLE JugadoresEquipo (
+	idJugador INT GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY,
+	idEquipo INT NOT NULL,
+	FOREIGN KEY (idEquipo) REFERENCES Equipos(idEquipo)
+);
+
+
+
+
+INSERT INTO JugadoresEquipo (idEquipo) VALUES (1);
+
+
+----------------------------------------------
+
+
+--TABLA USUARIOS
+CREATE TABLE Usuarios (
+	idUsuario INT GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY,
+	noCuenta VARCHAR(7),
+	nombre VARCHAR(30) NOT NULL,
+	apellido1 VARCHAR(30) NOT NULL,
+	apellido2 VARCHAR(30),
+	fechaNacimiento DATE,
+	correo VARCHAR(50),
+	tipoUsuario VARCHAR(30),
+	nombreUsuario VARCHAR(30),
+	contrasenna VARCHAR(30)
+
+);
+
+
+
+INSERT INTO Usuarios (noCuenta, nombre, apellido1, apellido2, fechaNacimiento, correo, tipoUsuario, nombreUsuario, contrasenna) VALUES ('C123456', 'Juan', 'Pérez', 'Gómez', '1990-05-15', 'juan.perez@example.com', 'Jugador', 'kamikase', 'jjjgg' );
+
+
+----------------------------------------------
+

@@ -17,6 +17,10 @@ public class EquipoDaoImp implements EquipoDao {
 
     // Constructor y otros métodos de inicialización de la conexión...
 
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public List<Equipo> getAllEquipos() {
         List<Equipo> todos = new ArrayList<>();

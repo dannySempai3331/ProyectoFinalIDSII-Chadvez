@@ -1,55 +1,50 @@
 package db;
 
-import dao.UsuarioDao;
+import dao.TorneoDao;
+import dtos.Torneo;
 import dtos.Usuario;
 import errores.PersistenciaException;
+
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class UsuarioDaoImp implements UsuarioDao {
+public class TorneoDaoImp implements TorneoDao{
 
     private Connection connection;
 
-    public UsuarioDaoImp() {
+    public TorneoDaoImp() {
     }
 
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
 
-    @Override
-    public List<Usuario> getAllUsers() {
+    public List<Torneo> getAllUsers() {
 
         Statement statement;
         ResultSet rs;
-        Usuario usuario;
-        List<Usuario> todos = new ArrayList<>();
+        Torneo torneo;
+        List<Torneo> todos = new ArrayList<>();
 
         try {
             statement = this.connection.createStatement();
-            rs = statement.executeQuery("SELECT * FROM usuarios");
+            rs = statement.executeQuery("SELECT * FROM Torneos");
 
             while (rs.next()){
-                usuario = new Usuario();
-                usuario.setIdUsuario(rs.getInt("idusuario"));
-                usuario.setNoCuenta(rs.getString("nocuenta"));
-                usuario.setNombre(rs.getString("nombre"));
-                usuario.setApellido1(rs.getString("apellido1"));
-
-                if(rs.getString("apellido2")!= null) {
-                    usuario.setApellido2(rs.getString("apellido2"));
-                }
-                else {
-                    usuario.setApellido2("-");
-                }
-
-                usuario.setFechaNacimiento(rs.getDate("fechanacimiento").toLocalDate());
-                usuario.setCorreo(rs.getString("correo"));
-                usuario.setTipoUsuario(rs.getString("tipousuario"));
-                usuario.setNombreUsuario(rs.getString("nombreusuario"));
-                usuario.setContrasenna(rs.getString("contrasenna"));
-                todos.add(usuario);
+                torneo = new Torneo();
+                torneo.setIdTorneo(rs.getInt("idtorneo"));
+                torneo.setNombre(rs.getString("nombre"));
+                torneo.setDisciplina(rs.getString("disciplina"));
+                torneo.setNoEquipos(rs.getInt("noequipos"));
+                torneo.setFechaInicio(rs.getDate("fechainicio").toLocalDate());
+                torneo.setFechaFin(rs.getDate("fechafin").toLocalDate());
+                torneo.setNoGrupos(rs.getInt("nogrupos"));
+                torneo.setPorcentajeAvance(rs.getDouble("porcentajeavance"));
+                todos.add(torneo);
             }
             statement.close();
             connection.close();
@@ -62,23 +57,23 @@ public class UsuarioDaoImp implements UsuarioDao {
     }
 
     @Override
-    public boolean createUsuario(Usuario usuario) {
+    public boolean createTorneo(Torneo torneo) {
 
         PreparedStatement ps;
-        String queryCreate ="INSERT INTO usuarios ";
+        String queryCreate ="INSERT INTO torneos ";
         String chain1 = "(";
         String chain2 = "";
         boolean wasCreated = false;
-        Map<String, Object> datosUsuario = getAtributosFromUsuario(usuario);
+        Map<String, Object> datosTorneo = getAtributosFromTorneo(torneo);
 
-        for(Map.Entry<String,Object> map : datosUsuario.entrySet()){
+        for(Map.Entry<String,Object> map : datosTorneo.entrySet()){
             chain1 += map.getKey() + ", ";
         }
 
         chain1 = chain1.substring(0,chain1.length()-2) + ")";
         queryCreate = queryCreate + chain1 + " VALUES(";
 
-        for(Map.Entry<String,Object> map : datosUsuario.entrySet()){
+        for(Map.Entry<String,Object> map : datosTorneo.entrySet()){
             Object value = map.getValue();
 
             if ((value instanceof String)||(value instanceof LocalDate)){
@@ -107,15 +102,15 @@ public class UsuarioDaoImp implements UsuarioDao {
     }
 
     @Override
-    public boolean modifyUsuario(Usuario usuario) {
+    public boolean modifyTorneo(Torneo torneo) {
         PreparedStatement ps;
-        String queryUpdate = "UPDATE usuarios SET ";
+        String queryUpdate = "UPDATE torneos SET ";
         String chain1 = "";
         Map<String,Object> update;
         boolean wasModified = false;
 
-        if(usuario.getIdUsuario() != 0){
-            update = getAtributosFromUsuario(usuario);
+        if(torneo.getIdTorneo() != 0){
+            update = getAtributosFromTorneo(torneo);
 
             for (Map.Entry<String, Object> map : update.entrySet()){
 
@@ -128,7 +123,7 @@ public class UsuarioDaoImp implements UsuarioDao {
             }
         }
 
-        queryUpdate = queryUpdate + chain1.substring(0,chain1.length()-2) + "WHERE idusuario = " + usuario.getIdUsuario();
+        queryUpdate = queryUpdate + chain1.substring(0,chain1.length()-2) + "WHERE idtorneo = " + torneo.getIdTorneo();
 
         try {
             ps = this.connection.prepareStatement(queryUpdate);
@@ -147,17 +142,17 @@ public class UsuarioDaoImp implements UsuarioDao {
     }
 
     @Override
-    public boolean deleteUsuario(Usuario usuario) {
+    public boolean deleteTorneo(Torneo torneo) {
 
         PreparedStatement ps;
         boolean wasDeleted = false;
 
         try {
-            if (usuario.getIdUsuario() != 0) {
-                if (checkIfExist(usuario.getIdUsuario())) {
+            if (torneo.getIdTorneo() != 0) {
+                if (checkIfExist(torneo.getIdTorneo())) {
 
-                    ps = this.connection.prepareStatement("DELETE FROM usuarios WHERE idusuario = ?");
-                    ps.setInt(1, usuario.getIdUsuario());
+                    ps = this.connection.prepareStatement("DELETE FROM torneos WHERE idtorneo = ?");
+                    ps.setInt(1, torneo.getIdTorneo());
 
                     ps.executeUpdate();
                     ps.close();
@@ -172,8 +167,8 @@ public class UsuarioDaoImp implements UsuarioDao {
     }
 
     @Override
-    public Usuario getById(int id) {
-        Usuario u = new Usuario();
+    public Torneo getById(int id) {
+        Torneo t = new Torneo();
         PreparedStatement ps;
         ResultSet rs;
 
@@ -181,31 +176,25 @@ public class UsuarioDaoImp implements UsuarioDao {
 
             try {
 
-                ps = this.connection.prepareStatement("SELECT * FROM usuarios WHERE idusuario = ? ");
+                ps = this.connection.prepareStatement("SELECT * FROM torneos WHERE idtorneo = ? ");
                 ps.setInt(1, id);
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
-                    u.setIdUsuario(rs.getInt("idusuario"));
-                    u.setNoCuenta(rs.getString("nocuenta"));
-                    u.setNombre(rs.getString("nombre"));
-                    u.setApellido1(rs.getString("apellido1"));
+                    t.setIdTorneo(rs.getInt("idtorneo"));
+                    t.setNombre(rs.getString("nombre"));
+                    t.setDisciplina(rs.getString("disciplina"));
+                    t.setNoEquipos(rs.getInt("noequipos"));
 
-                    if (rs.getString("apellido2") != null) {
-                        u.setApellido2(rs.getString("apellido2"));
-                    } else {
-                        u.setApellido2("-");
-                    }
+                    t.setFechaInicio(rs.getDate("fechainicio").toLocalDate());
+                    t.setFechaFin(rs.getDate("fechafin").toLocalDate());
 
-                    u.setFechaNacimiento(rs.getDate("fechanacimiento").toLocalDate());
-                    u.setCorreo(rs.getString("correo"));
-                    u.setTipoUsuario(rs.getString("tipousuario"));
-                    u.setNombreUsuario(rs.getString("nombreusuario"));
-                    u.setContrasenna(rs.getString("contrasenna"));
+                    t.setNoGrupos(rs.getInt("nogrupos"));
+                    t.setPorcentajeAvance(rs.getDouble("porcentajeavance"));
                 }
                 ps.close();
                 this.connection.close();
-                return u;
+                return t;
 
             } catch (SQLException e) {
                 throw new PersistenciaException(e);
@@ -214,8 +203,9 @@ public class UsuarioDaoImp implements UsuarioDao {
         return null;
     }
 
+    /*
     @Override
-    public Usuario getByNoCuenta(String noCuenta) {
+    public Torneo getByNoCuenta(String noCuenta) {
         Usuario u = new Usuario();
         PreparedStatement ps;
         ResultSet rs;
@@ -253,12 +243,14 @@ public class UsuarioDaoImp implements UsuarioDao {
             }
         }
         return null;
-    }
+    } */
 
 
     //A discusion, ya despues veo si se implementa.
-    @Override
-    public Usuario getPersonalData(int id) {
+
+
+    /*@Override
+        public Torneo getPersonalData(int id) {
         Usuario usuario;
         PreparedStatement ps;
         ResultSet rs;
@@ -293,7 +285,7 @@ public class UsuarioDaoImp implements UsuarioDao {
             throw new PersistenciaException(e);
         }
 
-        return usuario;
+        return torneo;
     }
 
     @Override
@@ -311,7 +303,7 @@ public class UsuarioDaoImp implements UsuarioDao {
                 id = rs.getInt(1);
             }
         }catch (SQLException e) {
-        throw new PersistenciaException(e);
+            throw new PersistenciaException(e);
         }
         return id;
     }
@@ -336,62 +328,52 @@ public class UsuarioDaoImp implements UsuarioDao {
             throw new PersistenciaException(e);
         }
 
-    }
+    }                           */
 
-    private Map<String,Object> getAtributosFromUsuario(Usuario u){
+    private Map<String,Object> getAtributosFromTorneo(Torneo t){
 
         Map<String, Object> resultado = new HashMap<String, Object>();
-        LocalDate date = u.getFechaNacimiento();
-        String val = u.getNoCuenta();
+
+        LocalDate dateI = t.getFechaInicio();
+        LocalDate dateF = t.getFechaFin();
+
+        String val = t.getNombre();
 
         if (val != null){
-            resultado.put("nocuenta",val);
+            resultado.put("idTorneo",val);
         }
 
-        val = u.getNombre();
+        val = t.getDisciplina();
 
         if (val != null){
-            resultado.put("nombre",val);
+            resultado.put("disciplina",val);
         }
 
-        val = u.getApellido1();
+        int num = t.getNoEquipos();
+
+        if (num != 0){
+            resultado.put("noequipos",num);
+        }
+
+
+        if (dateI != null){
+            resultado.put("fechainicio",dateI);
+        }
+
+        if (dateF != null){
+            resultado.put("fichafin",dateF);
+        }
+
+        num = t.getNoGrupos();
 
         if (val != null){
-            resultado.put("apellido1",val);
+            resultado.put("nogrupos",num);
         }
 
-        val = u.getApellido2();
+        double porc = t.getPorcentajeAvance();
 
-        if (val != null){
-            resultado.put("apellido2",val);
-        }
-
-        if (date != null){
-            resultado.put("fechanacimiento",date);
-        }
-
-        val = u.getCorreo();
-
-        if (val != null){
-            resultado.put("correo",val);
-        }
-
-        val = u.getTipoUsuario();
-
-        if (val != null){
-            resultado.put("tipousuario",val);
-        }
-
-        val = u.getNombreUsuario();
-
-        if (val != null){
-            resultado.put("nombreusuario",val);
-        }
-
-        val = u.getContrasenna();
-
-        if (val != null){
-            resultado.put("contrasenna",val);
+        if (porc != -1){
+            resultado.put("porcentajeavance",porc);
         }
 
         return resultado;
@@ -422,7 +404,7 @@ public class UsuarioDaoImp implements UsuarioDao {
         } else if (algo instanceof String) {
             try {
 
-                ps = this.connection.prepareStatement("SELECT EXISTS (SELECT 1 FROM usuarios WHERE nocuenta = ?)");
+                ps = this.connection.prepareStatement("SELECT EXISTS (SELECT 1 FROM torneos WHERE idtorneo = ?)");
                 ps.setString(1, algo.toString());
                 rs = ps.executeQuery();
 
@@ -440,3 +422,4 @@ public class UsuarioDaoImp implements UsuarioDao {
     }
 
 }
+

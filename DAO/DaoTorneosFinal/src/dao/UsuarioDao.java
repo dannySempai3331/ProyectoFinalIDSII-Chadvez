@@ -2,6 +2,7 @@ package dao;
 
 import dtos.Usuario;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface UsuarioDao {
@@ -13,7 +14,7 @@ public interface UsuarioDao {
     //modificar info de un usuario
     boolean modifyUsuario(Usuario usuario);
     //eliminar usuario
-    void deleteUsuario(Usuario usuario);
+    boolean deleteUsuario(Usuario usuario);
     //obtener por id
     Usuario getById(int id);
     //obtener por noCuenta
@@ -22,5 +23,6 @@ public interface UsuarioDao {
     Usuario getPersonalData(int id);
     //obtener el id segun el numero de cuenta
     int getIdByNoCuenta(String noCuenta);
+    LocalDate getFechaNacimiento(int id);
 
 }
