@@ -7,62 +7,161 @@ import java.util.List;
 import dao.EquipoDao;
 import dtos.Equipo;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class EquipoDaoImp implements EquipoDao {
 
     private Connection connection;
 
-    public EquipoDaoImp() {
-        // Inicializar la conexión a la base de datos si es necesario
-    }
+    // Constructor y otros métodos de inicialización de la conexión...
 
     @Override
     public List<Equipo> getAllEquipos() {
         List<Equipo> todos = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM equipos";
+            try (Statement statement = connection.createStatement();
+                 ResultSet rs = statement.executeQuery(query)) {
+                while (rs.next()) {
+                    Equipo equipo = new Equipo();
+                    equipo.setIdEquipo(rs.getInt("idEquipo"));
+                    equipo.setNombre(rs.getString("nombre"));
+                    equipo.setNoJugadores(rs.getInt("noJugadores"));
+                    equipo.setPuntaje(rs.getInt("puntaje"));
+                    equipo.setIdGrupo(rs.getInt("idGrupo"));
+
+                    todos.add(equipo);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+        }
         return todos;
     }
 
     @Override
     public Equipo createEquipo(Equipo equipo) {
-        // Lógica para insertar un nuevo equipo en la base de datos
-        // Utilizar la conexión 'connection' para ejecutar la consulta SQL
-        // y retornar el equipo creado
-        return null;
+        try {
+            String query = "INSERT INTO equipos (nombre, noJugadores, puntaje, idGrupo) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                preparedStatement.setString(1, equipo.getNombre());
+                preparedStatement.setInt(2, equipo.getNoJugadores());
+                preparedStatement.setInt(3, equipo.getPuntaje());
+                preparedStatement.setInt(4, equipo.getIdGrupo());
+
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Creating equipo failed, no rows affected.");
+                }
+
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        equipo.setIdEquipo(generatedKeys.getInt(1));
+                    } else {
+                        throw new SQLException("Creating equipo failed, no ID obtained.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+        }
+        return equipo;
     }
 
     @Override
     public Equipo modifyEquipo(Equipo equipo) {
-        // Lógica para modificar la información de un equipo en la base de datos
-        // Utilizar la conexión 'connection' para ejecutar la consulta SQL
-        // y retornar el equipo modificado
-        return null;
+        try {
+            String query = "UPDATE equipos SET nombre=?, noJugadores=?, puntaje=?, idGrupo=? WHERE idEquipo=?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, equipo.getNombre());
+                preparedStatement.setInt(2, equipo.getNoJugadores());
+                preparedStatement.setInt(3, equipo.getPuntaje());
+                preparedStatement.setInt(4, equipo.getIdGrupo());
+                preparedStatement.setInt(5, equipo.getIdEquipo());
+
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Modifying equipo failed, no rows affected.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+        }
+        return equipo;
     }
 
     @Override
     public void deleteEquipo(Equipo equipo) {
-        // Lógica para eliminar un equipo de la base de datos
-        // Utilizar la conexión 'connection' para ejecutar la consulta SQL
+        deleteEquipoById(equipo.getIdEquipo());
     }
 
     @Override
     public void deleteEquipoById(int id) {
-        // Lógica para eliminar un equipo por su ID de la base de datos
-        // Utilizar la conexión 'connection' para ejecutar la consulta SQL
+        try {
+            String query = "DELETE FROM equipos WHERE idEquipo=?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, id);
+
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Deleting equipo failed, no rows affected.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+        }
     }
 
     @Override
     public Equipo getEquipoById(int id) {
-        // Lógica para obtener un equipo por su ID de la base de datos
-        // Utilizar la conexión 'connection' para ejecutar la consulta SQL
-        // y retornar el equipo correspondiente
-        return null;
+        Equipo equipo = null;
+        try {
+            String query = "SELECT * FROM equipos WHERE idEquipo=?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, id);
+                try (ResultSet rs = preparedStatement.executeQuery()) {
+                    if (rs.next()) {
+                        equipo = new Equipo();
+                        equipo.setIdEquipo(rs.getInt("idEquipo"));
+                        equipo.setNombre(rs.getString("nombre"));
+                        equipo.setNoJugadores(rs.getInt("noJugadores"));
+                        equipo.setPuntaje(rs.getInt("puntaje"));
+                        equipo.setIdGrupo(rs.getInt("idGrupo"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+        }
+        return equipo;
     }
 
     @Override
     public List<Equipo> getEquiposByGrupo(int idGrupo) {
-        // Lógica para obtener todos los equipos de un grupo específico
-        // Utilizar la conexión 'connection' para ejecutar la consulta SQL
-        // y construir la lista de equipos
-        return null;
+        List<Equipo> equipos = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM equipos WHERE idGrupo=?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, idGrupo);
+                try (ResultSet rs = preparedStatement.executeQuery()) {
+                    while (rs.next()) {
+                        Equipo equipo = new Equipo();
+                        equipo.setIdEquipo(rs.getInt("idEquipo"));
+                        equipo.setNombre(rs.getString("nombre"));
+                        equipo.setNoJugadores(rs.getInt("noJugadores"));
+                        equipo.setPuntaje(rs.getInt("puntaje"));
+                        equipo.setIdGrupo(rs.getInt("idGrupo"));
+
+                        equipos.add(equipo);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+        }
+        return equipos;
     }
 
 	@Override
