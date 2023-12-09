@@ -1,15 +1,14 @@
 package db;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import dao.EquipoDao;
 import dtos.Equipo;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EquipoDaoImp implements EquipoDao {
 
@@ -17,25 +16,15 @@ public class EquipoDaoImp implements EquipoDao {
 
     // Constructor y otros métodos de inicialización de la conexión...
 
-    public void setConnection(Connection connection) {
-        this.connection = connection;
-    }
-
     @Override
-    public List<Equipo> getAllEquipos() {
-        List<Equipo> todos = new ArrayList<>();
+    public List<dtos.Equipo> getAllEquipos() {
+        List<dtos.Equipo> todos = new ArrayList<>();
         try {
             String query = "SELECT * FROM equipos";
-            try (Statement statement = connection.createStatement();
-                 ResultSet rs = statement.executeQuery(query)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+                 ResultSet rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
-                    Equipo equipo = new Equipo();
-                    equipo.setIdEquipo(rs.getInt("idEquipo"));
-                    equipo.setNombre(rs.getString("nombre"));
-                    equipo.setNoJugadores(rs.getInt("noJugadores"));
-                    equipo.setPuntaje(rs.getInt("puntaje"));
-                    equipo.setIdGrupo(rs.getInt("idGrupo"));
-
+                    dtos.Equipo equipo = mapResultSetToEquipo(rs);
                     todos.add(equipo);
                 }
             }
@@ -46,10 +35,10 @@ public class EquipoDaoImp implements EquipoDao {
     }
 
     @Override
-    public Equipo createEquipo(Equipo equipo) {
+    public dtos.Equipo createEquipo(dtos.Equipo equipo) {
         try {
             String query = "INSERT INTO equipos (nombre, noJugadores, puntaje, idGrupo) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 preparedStatement.setString(1, equipo.getNombre());
                 preparedStatement.setInt(2, equipo.getNoJugadores());
                 preparedStatement.setInt(3, equipo.getPuntaje());
@@ -75,29 +64,58 @@ public class EquipoDaoImp implements EquipoDao {
     }
 
     @Override
-    public Equipo modifyEquipo(Equipo equipo) {
+    public Equipo modifyEquipo(dtos.Equipo equipo) {
         try {
-            String query = "UPDATE equipos SET nombre=?, noJugadores=?, puntaje=?, idGrupo=? WHERE idEquipo=?";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setString(1, equipo.getNombre());
-                preparedStatement.setInt(2, equipo.getNoJugadores());
-                preparedStatement.setInt(3, equipo.getPuntaje());
-                preparedStatement.setInt(4, equipo.getIdGrupo());
-                preparedStatement.setInt(5, equipo.getIdEquipo());
+            // Construir la consulta SQL según los campos no nulos proporcionados
+            StringBuilder queryBuilder = new StringBuilder("UPDATE equipos SET");
+            List<Object> params = new ArrayList<>();
 
-                int affectedRows = preparedStatement.executeUpdate();
-                if (affectedRows == 0) {
-                    throw new SQLException("Modifying equipo failed, no rows affected.");
+            if (equipo.getNombre() != null && !equipo.getNombre().isEmpty()) {
+                queryBuilder.append(" nombre=?,");
+                params.add(equipo.getNombre());
+            }
+            if (equipo.getNoJugadores() > 0) {
+                queryBuilder.append(" noJugadores=?,");
+                params.add(equipo.getNoJugadores());
+            }
+            if (equipo.getPuntaje() >= 0) {
+                queryBuilder.append(" puntaje=?,");
+                params.add(equipo.getPuntaje());
+            }
+            if (equipo.getIdGrupo() > 0) {
+                queryBuilder.append(" idGrupo=?,");
+                params.add(equipo.getIdGrupo());
+            }
+
+            // Eliminar la última coma si hay campos a actualizar
+            if (params.size() > 0) {
+                queryBuilder.deleteCharAt(queryBuilder.length() - 1);
+            }
+
+            // Agregar la condición WHERE
+            queryBuilder.append(" WHERE idEquipo=?");
+            params.add(equipo.getIdEquipo());
+
+            // Crear la consulta final
+            String query = queryBuilder.toString();
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                // Establecer los valores de los parámetros
+                for (int i = 0; i < params.size(); i++) {
+                    preparedStatement.setObject(i + 1, params.get(i));
                 }
+
+                // Ejecutar la consulta
+                preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
         }
-        return equipo;
+		return equipo;
     }
 
     @Override
-    public void deleteEquipo(Equipo equipo) {
+    public void deleteEquipo(dtos.Equipo equipo) {
         deleteEquipoById(equipo.getIdEquipo());
     }
 
@@ -108,10 +126,7 @@ public class EquipoDaoImp implements EquipoDao {
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, id);
 
-                int affectedRows = preparedStatement.executeUpdate();
-                if (affectedRows == 0) {
-                    throw new SQLException("Deleting equipo failed, no rows affected.");
-                }
+                preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
@@ -119,20 +134,15 @@ public class EquipoDaoImp implements EquipoDao {
     }
 
     @Override
-    public Equipo getEquipoById(int id) {
-        Equipo equipo = null;
+    public dtos.Equipo getEquipoById(int id) {
+        dtos.Equipo equipo = null;
         try {
             String query = "SELECT * FROM equipos WHERE idEquipo=?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, id);
                 try (ResultSet rs = preparedStatement.executeQuery()) {
                     if (rs.next()) {
-                        equipo = new Equipo();
-                        equipo.setIdEquipo(rs.getInt("idEquipo"));
-                        equipo.setNombre(rs.getString("nombre"));
-                        equipo.setNoJugadores(rs.getInt("noJugadores"));
-                        equipo.setPuntaje(rs.getInt("puntaje"));
-                        equipo.setIdGrupo(rs.getInt("idGrupo"));
+                        equipo = mapResultSetToEquipo(rs);
                     }
                 }
             }
@@ -143,21 +153,15 @@ public class EquipoDaoImp implements EquipoDao {
     }
 
     @Override
-    public List<Equipo> getEquiposByGrupo(int idGrupo) {
-        List<Equipo> equipos = new ArrayList<>();
+    public List<dtos.Equipo> getEquiposByGrupo(int idGrupo) {
+        List<dtos.Equipo> equipos = new ArrayList<>();
         try {
             String query = "SELECT * FROM equipos WHERE idGrupo=?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, idGrupo);
                 try (ResultSet rs = preparedStatement.executeQuery()) {
                     while (rs.next()) {
-                        Equipo equipo = new Equipo();
-                        equipo.setIdEquipo(rs.getInt("idEquipo"));
-                        equipo.setNombre(rs.getString("nombre"));
-                        equipo.setNoJugadores(rs.getInt("noJugadores"));
-                        equipo.setPuntaje(rs.getInt("puntaje"));
-                        equipo.setIdGrupo(rs.getInt("idGrupo"));
-
+                        dtos.Equipo equipo = mapResultSetToEquipo(rs);
                         equipos.add(equipo);
                     }
                 }
@@ -168,23 +172,15 @@ public class EquipoDaoImp implements EquipoDao {
         return equipos;
     }
 
-	@Override
-	public Object createEquipo(Object equipo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object modifyEquipo(Object equipo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void deleteEquipo(Object equipo) {
-		// TODO Auto-generated method stub
-		
-	}
+    private dtos.Equipo mapResultSetToEquipo(ResultSet rs) throws SQLException {
+        dtos.Equipo equipo = new dtos.Equipo();
+        equipo.setIdEquipo(rs.getInt("idEquipo"));
+        equipo.setNombre(rs.getString("nombre"));
+        equipo.setNoJugadores(rs.getInt("noJugadores"));
+        equipo.setPuntaje(rs.getInt("puntaje"));
+        equipo.setIdGrupo(rs.getInt("idGrupo"));
+        return equipo;
+    }
 
     // Otros métodos según tus necesidades
 }

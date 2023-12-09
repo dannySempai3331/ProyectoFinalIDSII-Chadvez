@@ -2,27 +2,21 @@ package dao;
 
 import java.util.List;
 
-public interface EquipoDao<Equipo> {
+public interface EquipoDao {
 
-    List<Equipo> getAllEquipos();
+    List<dtos.Equipo> getAllEquipos();
 
-    Equipo createEquipo(Equipo equipo);
+    dtos.Equipo createEquipo(dtos.Equipo equipo);
 
-    Equipo modifyEquipo(Equipo equipo);
+    dtos.Equipo modifyEquipo(dtos.Equipo equipo);
 
-    void deleteEquipo(Equipo equipo);
+    void deleteEquipo(dtos.Equipo equipo);
 
     void deleteEquipoById(int id);
 
-    Equipo getEquipoById(int id);
+    dtos.Equipo getEquipoById(int id);
 
-    List<Equipo> getEquiposByGrupo(int idGrupo);
+    List<dtos.Equipo> getEquiposByGrupo(int idGrupo);
 
-	dtos.Equipo createEquipo(dtos.Equipo equipo);
-
-	dtos.Equipo modifyEquipo(dtos.Equipo equipo);
-
-	void deleteEquipo(dtos.Equipo equipo);
-
-    
+    // Otros métodos según tus necesidades
 }
