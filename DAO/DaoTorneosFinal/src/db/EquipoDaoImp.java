@@ -6,6 +6,7 @@ import java.util.List;
 
 import dao.EquipoDao;
 import dtos.Equipo;
+import errores.PersistenciaException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,10 +16,14 @@ public class EquipoDaoImp implements EquipoDao {
 
     private Connection connection;
 
-    // Constructor y otros métodos de inicialización de la conexión...
+    private JugadoresEquipoImp jei = new JugadoresEquipoImp();
+
+    public EquipoDaoImp() {
+    }
 
     public void setConnection(Connection connection) {
         this.connection = connection;
+        jei.setConnection(connection);
     }
 
     @Override
@@ -40,7 +45,7 @@ public class EquipoDaoImp implements EquipoDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
         return todos;
     }
@@ -69,7 +74,7 @@ public class EquipoDaoImp implements EquipoDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
         return equipo;
     }
@@ -91,13 +96,14 @@ public class EquipoDaoImp implements EquipoDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
         return equipo;
     }
 
     @Override
     public void deleteEquipo(Equipo equipo) {
+        jei.darDeBajaEquipo(equipo.getIdEquipo());
         deleteEquipoById(equipo.getIdEquipo());
     }
 
@@ -114,7 +120,7 @@ public class EquipoDaoImp implements EquipoDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
     }
 
@@ -137,7 +143,7 @@ public class EquipoDaoImp implements EquipoDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
         return equipo;
     }
@@ -163,7 +169,7 @@ public class EquipoDaoImp implements EquipoDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
         return equipos;
     }
@@ -186,5 +192,4 @@ public class EquipoDaoImp implements EquipoDao {
 		
 	}
 
-    // Otros métodos según tus necesidades
 }

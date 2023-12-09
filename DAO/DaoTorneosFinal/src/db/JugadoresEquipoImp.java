@@ -55,7 +55,7 @@ public class JugadoresEquipoImp implements JugadoresEquipoDao {
             ps.setInt(1,id);
             ps.executeUpdate();
             ps.close();
-            this.connection.close();
+            //this.connection.close();
 
             wasDeleted = true;
 
@@ -76,7 +76,7 @@ public class JugadoresEquipoImp implements JugadoresEquipoDao {
             ps.setInt(1,id);
             ps.executeUpdate();
             ps.close();
-            this.connection.close();
+            //this.connection.close();
 
             wasDeleted = true;
         }catch (SQLException e){
@@ -85,7 +85,7 @@ public class JugadoresEquipoImp implements JugadoresEquipoDao {
         return wasDeleted;
     }
 
-    public boolean isEquipoFull(int  idEquipo){
+    private boolean isEquipoFull(int idEquipo){
 
         PreparedStatement ps;
         ResultSet rs;

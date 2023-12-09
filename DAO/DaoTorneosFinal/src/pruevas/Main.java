@@ -1,9 +1,9 @@
 package pruevas;
 
-import db.GrupoDaoImp;
-import db.JugadoresEquipoImp;
-import db.UsuarioDaoImp;
+import db.*;
+import dtos.Equipo;
 import dtos.Grupo;
+import dtos.Torneo;
 import dtos.Usuario;
 
 import java.sql.Connection;
@@ -49,50 +49,19 @@ public class Main {
         String password = "megumin";
 
         try {
-           // Class.forName("org.postgresql.Driver");
+           Class.forName("org.postgresql.Driver");
            connection = DriverManager.getConnection(url,user,password);
             //Derby
-            //connection=DriverManager.getConnection(url);
-            //usuarioDaoImp.setConnection(connection);
+            //connection=DriverManager.getConnection(url)
 
-            GrupoDaoImp gdi = new GrupoDaoImp();
-            gdi.setConnection(connection);
-            /*jei.setConnection(connection);
-            Usuario u = new Usuario();
-            u.setIdUsuario(5);
-            System.out.println(jei.isEquipoFull(1));*/
+           EquipoDaoImp edi = new EquipoDaoImp();
+           edi.setConnection(connection);
 
-            Grupo g = new Grupo();
-            g.setNombre("futbol");
+           Equipo e = new Equipo();
+           e.setIdEquipo(1);
 
-            gdi.createGrupo(g);
+            edi.deleteEquipo(e);
 
-            /*
-            Usuario u = new Usuario();
-            u.setIdUsuario(5);
-            u.setCorreo("andy123@mail.com");
-            u.setNombreUsuario("farsa123");
-
-            System.out.println(UsuarioDaoImp.modifyUsuario(u));
-
-            Usuario u = new Usuario();
-            LocalDate fechaEspecifica = LocalDate.of(2022, 12, 31);
-            u.setNoCuenta("12345");
-            u.setNombre("Andy Gerald");
-            u.setApellido1("San Juan");
-            u.setApellido2("Martinez");
-            u.setFechaNacimiento(fechaEspecifica);
-            u.setCorreo("andy123@mail.com");
-            u.setTipoUsuario("admin");
-            u.setNombreUsuario("AndyxDiana");
-            u.setContrasenna("dianaforever");
-            System.out.println(UsuarioDaoImp.createUsuario(u));
-
-            List<Usuario> u = UsuarioDaoImp.getAllUsers();
-            //Iterar sobre la lista u e imprimir usuarios
-            for (Usuario usuario : u) {
-                System.out.println(usuario);
-            }*/
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -66,7 +66,6 @@ public class GrupoDaoImp implements GrupoDao {
             }
         }
         queryCreate=queryCreate + chain2.substring(0,chain2.length()-1) + ")";
-        System.out.printf(queryCreate);
         try{
             ps = this.connection.prepareStatement(queryCreate);
             ps.executeUpdate();
@@ -140,7 +139,7 @@ public class GrupoDaoImp implements GrupoDao {
         return resultado;
     }
 
-    public boolean checkIfExist(Object algo){
+    private boolean checkIfExist(Object algo){
         boolean isPresent = false;
         PreparedStatement ps;
         ResultSet rs;
