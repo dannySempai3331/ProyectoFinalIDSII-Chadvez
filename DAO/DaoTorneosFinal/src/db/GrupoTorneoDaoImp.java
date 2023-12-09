@@ -28,7 +28,7 @@ public class GrupoTorneoDaoImp implements GruposTorneosDao {
         List<GruposTorneos> todos = new ArrayList<>();
         try{
             statement = this.connection.createStatement();
-            rs = statement.executeQuery("SELECT *FROM grupos");
+            rs = statement.executeQuery("SELECT *FROM grupostorneos");
             while(rs.next()){
                 grupoTorneo = new GruposTorneos();
                 grupoTorneo.setIdGrupo(rs.getInt("idgrupo"));

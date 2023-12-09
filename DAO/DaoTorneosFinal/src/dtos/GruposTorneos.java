@@ -23,4 +23,12 @@ public class GruposTorneos {
     public void setIdTorneo(int idTorneo) {
         this.idTorneo = idTorneo;
     }
+
+    @Override
+    public String toString() {
+        return "GruposTorneos{" +
+                "idGrupo=" + idGrupo +
+                ", idTorneo=" + idTorneo +
+                '}';
+    }
 }

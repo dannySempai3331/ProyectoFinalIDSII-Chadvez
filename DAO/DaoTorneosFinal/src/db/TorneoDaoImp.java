@@ -85,7 +85,6 @@ public class TorneoDaoImp implements TorneoDao{
         }
 
         queryCreate = queryCreate + chain2.substring(0,chain2.length()-2) + ")";
-        //System.out.println(queryCreate);
 
         try {
             ps = this.connection.prepareStatement(queryCreate);
@@ -203,133 +202,6 @@ public class TorneoDaoImp implements TorneoDao{
         return null;
     }
 
-    /*
-    @Override
-    public Torneo getByNoCuenta(String noCuenta) {
-        Usuario u = new Usuario();
-        PreparedStatement ps;
-        ResultSet rs;
-
-        if (checkIfExist(noCuenta)){
-            try {
-
-                ps = this.connection.prepareStatement("SELECT * FROM usuarios WHERE nocuenta = ? ");
-                ps.setString(1, noCuenta);
-                rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    u.setIdUsuario(rs.getInt("idusuario"));
-                    u.setNombre(rs.getString("nombre"));
-                    u.setApellido1(rs.getString("apellido1"));
-
-                    if (rs.getString("apellido2") != null) {
-                        u.setApellido2(rs.getString("apellido2"));
-                    } else {
-                        u.setApellido2("-");
-                    }
-
-                    u.setFechaNacimiento(rs.getDate("fechanacimiento").toLocalDate());
-                    u.setCorreo(rs.getString("correo"));
-                    u.setTipoUsuario(rs.getString("tipousuario"));
-                    u.setNombreUsuario(rs.getString("nombreusuario"));
-                    u.setContrasenna(rs.getString("contrasenna"));
-                }
-                ps.close();
-                this.connection.close();
-                return u;
-
-            } catch (SQLException e) {
-                throw new PersistenciaException(e);
-            }
-        }
-        return null;
-    } */
-
-
-    //A discusion, ya despues veo si se implementa.
-
-
-    /*@Override
-        public Torneo getPersonalData(int id) {
-        Usuario usuario;
-        PreparedStatement ps;
-        ResultSet rs;
-
-        try{
-            ps = this.connection.prepareStatement("SELECT nocuenta, nombre, apellido1, apellido2, fechanacimiento, correo FROM usuarios WHERE idusuario = ?");
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-
-            usuario = new Usuario();
-            usuario.setIdUsuario(id);
-
-            while (rs.next()){
-                usuario.setNoCuenta(rs.getString("nocuenta"));
-                usuario.setNombre(rs.getString("nombre"));
-                usuario.setApellido1(rs.getString("apellido1"));
-
-                if (rs.getString("apellido2") != null) {
-                    usuario.setApellido2(rs.getString("apellido2"));
-                } else {
-                    usuario.setApellido2(null);
-                }
-
-                usuario.setFechaNacimiento(rs.getDate("fechanacimiento").toLocalDate());
-                usuario.setCorreo(rs.getString("correo"));
-
-            }
-            ps.close();
-            this.connection.close();
-
-        }catch (SQLException e){
-            throw new PersistenciaException(e);
-        }
-
-        return torneo;
-    }
-
-    @Override
-    public int getIdByNoCuenta(String noCuenta) {
-        int id = 0;
-        PreparedStatement ps;
-        ResultSet rs;
-
-        try {
-            ps = this.connection.prepareStatement("SELECT idusuario FROM usuarios WHERE nocuenta = ?");
-            ps.setString(1, noCuenta);
-            rs = ps.executeQuery();
-
-            if (rs.next()){
-                id = rs.getInt(1);
-            }
-        }catch (SQLException e) {
-            throw new PersistenciaException(e);
-        }
-        return id;
-    }
-
-    @Override
-    public LocalDate getFechaNacimiento(int id) {
-
-        PreparedStatement ps;
-        ResultSet rs;
-        LocalDate date = null;
-
-        try {
-            ps = this.connection.prepareStatement("SELECT fechanacimiento FROM usuarios WHERE idusuario = ?");
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-
-            if (rs.next()){
-                date = rs.getDate("fechanacimiento").toLocalDate();
-            }
-            return date;
-        }catch (SQLException e) {
-            throw new PersistenciaException(e);
-        }
-
-    }                           */
-
     private Map<String,Object> getAtributosFromTorneo(Torneo t){
 
         Map<String, Object> resultado = new HashMap<String, Object>();
@@ -340,7 +212,7 @@ public class TorneoDaoImp implements TorneoDao{
         String val = t.getNombre();
 
         if (val != null){
-            resultado.put("idTorneo",val);
+            resultado.put("nombre",val);
         }
 
         val = t.getDisciplina();
@@ -361,7 +233,7 @@ public class TorneoDaoImp implements TorneoDao{
         }
 
         if (dateF != null){
-            resultado.put("fichafin",dateF);
+            resultado.put("fechafin",dateF);
         }
 
         num = t.getNoGrupos();

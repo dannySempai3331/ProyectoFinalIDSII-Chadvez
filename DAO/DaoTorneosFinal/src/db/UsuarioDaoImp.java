@@ -10,12 +10,14 @@ import java.util.*;
 public class UsuarioDaoImp implements UsuarioDao {
 
     private Connection connection;
+    private JugadoresEquipoImp jei = new JugadoresEquipoImp();
 
     public UsuarioDaoImp() {
     }
 
     public void setConnection(Connection connection) {
         this.connection = connection;
+        jei.setConnection(connection);
     }
 
     @Override
@@ -156,11 +158,17 @@ public class UsuarioDaoImp implements UsuarioDao {
             if (usuario.getIdUsuario() != 0) {
                 if (checkIfExist(usuario.getIdUsuario())) {
 
+                    if(checkIsJugador(usuario.getIdUsuario())){
+                        jei.darDeBajaJugador(usuario.getIdUsuario());
+                    }
+
                     ps = this.connection.prepareStatement("DELETE FROM usuarios WHERE idusuario = ?");
                     ps.setInt(1, usuario.getIdUsuario());
 
                     ps.executeUpdate();
                     ps.close();
+
+
                     this.connection.close();
                     wasDeleted = true;
                 }
@@ -437,6 +445,29 @@ public class UsuarioDaoImp implements UsuarioDao {
             }
         }
         return isPresent;
+    }
+
+    public boolean checkIsJugador(int id){
+        boolean isJugador = false;
+        PreparedStatement ps;
+        ResultSet rs;
+
+        try{
+            ps = this.connection.prepareStatement("SELECT tipousuario FROM usuarios WHERE idusuario = ?");
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+            if(rs.next()){
+                if(Objects.equals(rs.getString(1), "jugador")){
+                    isJugador = true;
+                }
+            }
+           ps.close();
+
+        }catch (SQLException e){
+            throw new PersistenciaException(e);
+        }
+        return isJugador;
     }
 
 }

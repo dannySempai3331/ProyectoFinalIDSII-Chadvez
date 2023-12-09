@@ -9,13 +9,25 @@ import java.util.List;
 
 import dao.EquipoDao;
 import dtos.Equipo;
+import errores.PersistenciaException;
 
 public class EquipoDaoImp implements EquipoDao {
 
     private Connection connection;
 
-    // Constructor y otros métodos de inicialización de la conexión...
+    private JugadoresEquipoImp jei = new JugadoresEquipoImp();
 
+    public EquipoDaoImp() {
+    }
+
+<<<<<<< HEAD
+=======
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+        jei.setConnection(connection);
+    }
+
+>>>>>>> 0cbe9c6c2ad7f881a3604ee805e461f06994fe1e
     @Override
     public List<dtos.Equipo> getAllEquipos() {
         List<dtos.Equipo> todos = new ArrayList<>();
@@ -29,7 +41,7 @@ public class EquipoDaoImp implements EquipoDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
         return todos;
     }
@@ -58,7 +70,7 @@ public class EquipoDaoImp implements EquipoDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
         return equipo;
     }
@@ -109,13 +121,18 @@ public class EquipoDaoImp implements EquipoDao {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
 		return equipo;
     }
 
     @Override
+<<<<<<< HEAD
     public void deleteEquipo(dtos.Equipo equipo) {
+=======
+    public void deleteEquipo(Equipo equipo) {
+        jei.darDeBajaEquipo(equipo.getIdEquipo());
+>>>>>>> 0cbe9c6c2ad7f881a3604ee805e461f06994fe1e
         deleteEquipoById(equipo.getIdEquipo());
     }
 
@@ -129,7 +146,7 @@ public class EquipoDaoImp implements EquipoDao {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
     }
 
@@ -147,7 +164,7 @@ public class EquipoDaoImp implements EquipoDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
         return equipo;
     }
@@ -167,7 +184,7 @@ public class EquipoDaoImp implements EquipoDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejar la excepción adecuadamente en un entorno real
+            throw new PersistenciaException(e);
         }
         return equipos;
     }
@@ -182,5 +199,4 @@ public class EquipoDaoImp implements EquipoDao {
         return equipo;
     }
 
-    // Otros métodos según tus necesidades
 }
