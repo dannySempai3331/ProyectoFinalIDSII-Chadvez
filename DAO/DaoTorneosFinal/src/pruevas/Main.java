@@ -58,9 +58,12 @@ public class Main {
            edi.setConnection(connection);
 
            Equipo e = new Equipo();
-           e.setIdEquipo(1);
+           e.setNombre("Los insanos Recargado");
+           e.setIdEquipo(2);
+           e.setPuntaje(10);
+           e.setNoJugadores(10);
 
-            edi.deleteEquipo(e);
+           System.out.println(edi.getEquipoById(5));
 
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -20,14 +20,11 @@ public class EquipoDaoImp implements EquipoDao {
     public EquipoDaoImp() {
     }
 
-<<<<<<< HEAD
-=======
     public void setConnection(Connection connection) {
         this.connection = connection;
         jei.setConnection(connection);
     }
 
->>>>>>> 0cbe9c6c2ad7f881a3604ee805e461f06994fe1e
     @Override
     public List<dtos.Equipo> getAllEquipos() {
         List<dtos.Equipo> todos = new ArrayList<>();
@@ -127,12 +124,8 @@ public class EquipoDaoImp implements EquipoDao {
     }
 
     @Override
-<<<<<<< HEAD
-    public void deleteEquipo(dtos.Equipo equipo) {
-=======
     public void deleteEquipo(Equipo equipo) {
         jei.darDeBajaEquipo(equipo.getIdEquipo());
->>>>>>> 0cbe9c6c2ad7f881a3604ee805e461f06994fe1e
         deleteEquipoById(equipo.getIdEquipo());
     }
 

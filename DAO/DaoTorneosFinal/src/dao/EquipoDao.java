@@ -18,5 +18,4 @@ public interface EquipoDao {
 
     List<dtos.Equipo> getEquiposByGrupo(int idGrupo);
 
-    // Otros métodos según tus necesidades
 }
