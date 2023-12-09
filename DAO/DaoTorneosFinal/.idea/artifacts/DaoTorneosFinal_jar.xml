@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DaoTorneosFinal:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/DaoTorneosFinal_jar</output-path>
+    <root id="archive" name="DaoTorneosFinal.jar">
+      <element id="module-output" name="DaoTorneosFinal" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../postgresql-42.6.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
