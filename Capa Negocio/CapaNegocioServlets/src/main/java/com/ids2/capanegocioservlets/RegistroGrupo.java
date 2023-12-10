@@ -1,5 +1,7 @@
 package com.ids2.capanegocioservlets;
 
+import db.GrupoDaoImp;
+import dtos.Grupo;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

@@ -1,5 +1,7 @@
 package com.ids2.capanegocioservlets;
 
+import db.UsuarioDaoImp;
+import dtos.Usuario;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,6 +14,11 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @WebServlet(value = "/signup")
 public class SignUp extends HttpServlet {
@@ -41,17 +48,41 @@ public class SignUp extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Connection c;
 
+        Usuario usuario = new Usuario();
+        UsuarioDaoImp udi = new UsuarioDaoImp();
+        String fechaString;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         try {
             c = this.ds.getConnection();
-            response.getWriter().append("Served at: ").append(c.toString());
+            //response.getWriter().append("Served at: ").append(c.toString());
+            udi.setConnection(c);
+            usuario.setNoCuenta(request.getParameter("noCuenta"));
+            usuario.setNombre(request.getParameter("nombre"));
+            usuario.setApellido1(request.getParameter("ap1"));
+            usuario.setApellido2(request.getParameter("ap2"));
+
+            fechaString = request.getParameter("fechaNacimiento");
+            Date fechaDate = sdf.parse(fechaString);
+            Instant instant = fechaDate.toInstant();
+            LocalDate fechaNacimiento = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+
+            usuario.setFechaNacimiento(fechaNacimiento);
+            usuario.setCorreo(request.getParameter("email"));
+            usuario.setNombreUsuario(request.getParameter("nombreUsuario"));
+            usuario.setContrasenna(request.getParameter("contrasenna"));
+
+            System.out.println(usuario);
+            udi.createUsuario(usuario);
+
+            response.sendRedirect("index.html");
+
         } catch (Exception e) {
             throw new ServletException(e.getMessage());
         }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        //doGet(request,response);
-
+        doGet(request,response);
     }
 }

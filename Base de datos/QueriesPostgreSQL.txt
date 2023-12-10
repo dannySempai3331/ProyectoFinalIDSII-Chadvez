@@ -50,7 +50,7 @@ CREATE TABLE Usuarios(
     apellido2 VARCHAR(30),
     fechaNacimiento DATE NOT NULL,
     correo VARCHAR(50) NOT NULL,
-    tipoUsuario VARCHAR(30) NOT NULL
+    tipoUsuario VARCHAR(30) 
 );
 
 --Tabla UsuarioContrasenna
