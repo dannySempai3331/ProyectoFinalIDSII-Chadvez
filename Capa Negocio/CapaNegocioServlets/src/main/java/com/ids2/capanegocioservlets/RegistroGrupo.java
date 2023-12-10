@@ -13,8 +13,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import DaoImp.GrupoDaoImp;
-import Dtos.Grupos;
+import db.GrupoDaoImp;
+import dtos.Grupo;
 
 /**
  * Servlet implementation class RegistroGrupo
@@ -47,7 +47,7 @@ public class RegistroGrupo extends HttpServlet {
 		Connection con;
 		String id;
 		String nombre;
-		Grupos grupo;
+		Grupo grupo;
 		try {
 			con=this.ds.getConnection();
 			dao = new GrupoDaoImp();
@@ -55,7 +55,7 @@ public class RegistroGrupo extends HttpServlet {
 			 id=request.getParameter("idgrupo");
 			 nombre = request.getParameter("nombregrupo");
 		
-		grupo = new Grupos();
+		grupo = new Grupo();
 		grupo.setIdGrupo(Integer.parseInt(id));
 		grupo.setNombre(nombre);
 		dao.createGrupo(grupo);
