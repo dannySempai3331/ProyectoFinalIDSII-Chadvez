@@ -251,7 +251,7 @@ public class TorneoDaoImp implements TorneoDao{
         return resultado;
     }
 
-    public boolean checkIfExist(Object algo) {
+    private boolean checkIfExist(Object algo) {
         boolean isPresent = false;
         PreparedStatement ps;
         ResultSet rs;

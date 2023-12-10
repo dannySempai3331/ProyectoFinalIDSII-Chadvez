@@ -405,7 +405,7 @@ public class UsuarioDaoImp implements UsuarioDao {
         return resultado;
     }
 
-    public boolean checkIfExist(Object algo) {
+    private boolean checkIfExist(Object algo) {
         boolean isPresent = false;
         PreparedStatement ps;
         ResultSet rs;
@@ -447,7 +447,7 @@ public class UsuarioDaoImp implements UsuarioDao {
         return isPresent;
     }
 
-    public boolean checkIsJugador(int id){
+    private boolean checkIsJugador(int id){
         boolean isJugador = false;
         PreparedStatement ps;
         ResultSet rs;
