@@ -92,7 +92,7 @@ public class RegistroTorneo extends HttpServlet {
 
             torneo = new Torneo();
 
-<<<<<<< HEAD
+
             torneo.setNombre(nombre);
             torneo.setDisciplina(disciplina);
             torneo.setNoEquipos(Integer.parseInt(noEquipos));
@@ -101,11 +101,11 @@ public class RegistroTorneo extends HttpServlet {
             torneo.setFechaInicio(fechaInicio);
             torneo.setFechaFin(fechaFin);
 
-=======
+
             //torneo.setIdTorneo(Integer.parseInt(idTorneo));
             torneo.setNombre(nombre);
             //torneo.set
->>>>>>> 2bdadb76014c2a515603d0603200a870cfed91a0
+
             dao.createTorneo(torneo);
             response.sendRedirect("torneosregistro.html");
         }catch(Exception e) {
