@@ -47,9 +47,9 @@ public class RegistroTorneo extends HttpServlet {
         String idTorneo;
         String nombre;
         String disciplina;
-        int noEquipos;
-        int noGrupos;
-        double porcentajeavance;
+        String noEquipos;
+        String noGrupos;
+        String porcentajeavance;
 
 
         Torneo torneo;
@@ -58,7 +58,6 @@ public class RegistroTorneo extends HttpServlet {
             dao = new TorneoDaoImp();
             dao.setConnection(con);
 
-            id=request.getParameter("idtorneo");
             nombre = request.getParameter("nombre");
             disciplina = request.getParameter("disciplina");
             noEquipos = request.getParameter("noequipos");
@@ -69,9 +68,9 @@ public class RegistroTorneo extends HttpServlet {
 
             torneo = new Torneo();
 
-            torneo.setIdTorneo(Integer.parseInt(idTorneo));
+            //torneo.setIdTorneo(Integer.parseInt(idTorneo));
             torneo.setNombre(nombre);
-            torneo.set
+            //torneo.set
             dao.createTorneo(torneo);
             response.sendRedirect("altaTorneo.html");
         }catch(Exception e) {
