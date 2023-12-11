@@ -31,25 +31,16 @@
     <header>
         <h2 class="logo">Venationes</h2>
 		<h2 class="logo"> Lista de Grupos </h2>
-		<%
-			//List<GrupoDaoImp> listGrupo = (List)request.getSession().getAttribute("listGrupo");
-			GrupoDaoImp g = new GrupoDaoImp();		
-		%>
-				<p><b> Grupo: <% g.getAllGroups(); %></b></p>
-
-
-		<% %>
         <nav class="navegacion">
             <a href="indexP.html">Inicio</a>
             <a href="servicios.html">Informacion</a>
             <a href="rol.jsp">Rol de juego</a>
             <a href="equipos.html">Equipos</a>
 
-
         </nav>
     </header>
     <section>
-
+	
     </section>
 
 </body>

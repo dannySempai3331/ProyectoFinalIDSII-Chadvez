@@ -22,6 +22,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import dao.GrupoDao;
+
 /*
 Elaborado por:
 Andy Gerald San Juan Martinez
@@ -61,27 +63,36 @@ public class RegistroGrupo extends HttpServlet {
 	
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Connection con;
-		GrupoDaoImp dao;
+		GrupoDao dao;
+		GrupoDaoImp daoImp;
+		List<Grupo> grupos;
+		PrintWriter salida;
+    	salida=resp.getWriter();
+		
 		PreparedStatement statment;
 		String query ="SELECT *FROM GRUPOS;";
 		String query2 = "SELECT *FROM EQUIPOS WHERE IDGRUPO =1 ORDER BY PUNTAJE DESC ; ";
     	
 		try {
 			con = this.ds.getConnection();
-			dao = new GrupoDaoImp();
-			dao.setConnection(con);
-			dao.getAllGroups();
-			List<GrupoDaoImp> getAllG = new ArrayList();
+			daoImp = new GrupoDaoImp();
+			daoImp.setConnection(con);
+			dao=daoImp;
 			
-			HttpSession sesion = req.getSession();
-			sesion.setAttribute("Lista de Grupos", getAllG);
+			grupos =dao.getAllGroups();
+			for(Grupo g:grupos) {
+				salida.print(g.toString());
+			}
+			//List<GrupoDaoImp> getAllG = new ArrayList();
+			
+			//HttpSession sesion = req.getSession();
+			//sesion.setAttribute("Lista de Grupos", getAllG);
 			resp.sendRedirect("rol.jsp");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		PrintWriter salida;
-    	salida=resp.getWriter();
+		
     	
     	
 		//super.doGet(req, resp);
