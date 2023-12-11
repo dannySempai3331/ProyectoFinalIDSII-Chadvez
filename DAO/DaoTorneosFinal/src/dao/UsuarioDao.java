@@ -5,6 +5,19 @@ import dtos.Usuario;
 import java.time.LocalDate;
 import java.util.List;
 
+/*
+Elaborado por:
+Andy Gerald San Juan Martinez
+
+Valeria Itzel Contreras Miranda
+
+Jose Alejandro Terraza Gonzalez
+
+Brayan Enrique Hernandez Flores
+
+José Daniel Pérez Mejía
+*/
+
 public interface UsuarioDao {
 
     //obtener todos los usuarios
@@ -24,5 +37,7 @@ public interface UsuarioDao {
     //obtener el id segun el numero de cuenta
     int getIdByNoCuenta(String noCuenta);
     LocalDate getFechaNacimiento(int id);
+
+    Usuario getDataForLogIn(Usuario u);
 
 }

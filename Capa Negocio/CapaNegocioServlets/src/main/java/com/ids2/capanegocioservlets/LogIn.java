@@ -14,11 +14,11 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 
 /*
 Elaborado por:
@@ -33,8 +33,8 @@ Brayan Enrique Hernandez Flores
 José Daniel Pérez Mejía
 */
 
-@WebServlet(value = "/signup")
-public class SignUp extends HttpServlet {
+@WebServlet(value = "/login")
+public class LogIn extends HttpServlet {
     private DataSource ds;
 
     public void init(ServletConfig config) throws ServletException {
@@ -58,44 +58,46 @@ public class SignUp extends HttpServlet {
             throw new ServletException("No hay contexto inicial!");
         }
     }
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Connection c;
 
-        Usuario usuario = new Usuario();
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Connection c;
+        Usuario usuario1 = new Usuario();
+        Usuario usuario2;
         UsuarioDaoImp udi = new UsuarioDaoImp();
-        String fechaString;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
             c = this.ds.getConnection();
-            //response.getWriter().append("Served at: ").append(c.toString());
             udi.setConnection(c);
-            usuario.setNoCuenta(request.getParameter("noCuenta"));
-            usuario.setNombre(request.getParameter("nombre"));
-            usuario.setApellido1(request.getParameter("ap1"));
-            usuario.setApellido2(request.getParameter("ap2"));
 
-            fechaString = request.getParameter("fechaNacimiento");
-            Date fechaDate = sdf.parse(fechaString);
-            Instant instant = fechaDate.toInstant();
-            LocalDate fechaNacimiento = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-            usuario.setTipoUsuario("jugador");
-            usuario.setFechaNacimiento(fechaNacimiento);
-            usuario.setCorreo(request.getParameter("email"));
-            usuario.setNombreUsuario(request.getParameter("nombreUsuario"));
-            usuario.setContrasenna(request.getParameter("contrasenna"));
+            usuario1.setCorreo(req.getParameter("emailLogIn"));
+            usuario1.setContrasenna(req.getParameter("passwordLogIn"));
 
-            System.out.println(usuario);
-            udi.createUsuario(usuario);
+            usuario2 = udi.getDataForLogIn(usuario1);
 
-            response.sendRedirect("index.html");
+            //Switch case para verificar si el tipo de usuario es un jugador, admin o juez
+
+            switch (usuario2.getTipoUsuario()) {
+                case "jugador":
+                    resp.sendRedirect("jugador.html");
+                    break;
+                case "admin":
+                    resp.sendRedirect("admin.jsp");
+                    break;
+                case "juez":
+                    resp.sendRedirect("juez.jsp");
+                    break;
+                default:
+                    resp.sendRedirect("index.html");
+                    break;
+            }
 
         } catch (Exception e) {
             throw new ServletException(e.getMessage());
         }
+
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request,response);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req,resp);
     }
 }

@@ -7,6 +7,19 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
 
+/*
+Elaborado por:
+Andy Gerald San Juan Martinez
+
+Valeria Itzel Contreras Miranda
+
+Jose Alejandro Terraza Gonzalez
+
+Brayan Enrique Hernandez Flores
+
+José Daniel Pérez Mejía
+*/
+
 public class UsuarioDaoImp implements UsuarioDao {
 
     private Connection connection;
@@ -344,6 +357,32 @@ public class UsuarioDaoImp implements UsuarioDao {
             throw new PersistenciaException(e);
         }
 
+    }
+
+    @Override
+    public Usuario getDataForLogIn(Usuario u) {
+        Usuario u1 = new Usuario();
+        PreparedStatement ps;
+        ResultSet rs;
+
+        try{
+            ps = this.connection.prepareStatement("SELECT tipousuario FROM usuarios WHERE correo = ? AND contrasenna = ?");
+            ps.setString(1,u.getCorreo());
+            ps.setString(2,u.getContrasenna());
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                u1.setTipoUsuario(rs.getString(1));
+            }
+
+            if (u1.getTipoUsuario() != null){
+                return u1;
+            }
+
+        }catch (SQLException e){
+            throw new PersistenciaException(e);
+        }
+        return null;
     }
 
     private Map<String,Object> getAtributosFromUsuario(Usuario u){
