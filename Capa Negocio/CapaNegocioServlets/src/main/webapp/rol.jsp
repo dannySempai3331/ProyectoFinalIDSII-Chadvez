@@ -13,7 +13,7 @@
     <script src="https://kit.fontawesome.com/852d701f33.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
     <title> Rol de equipos</title>
-
+	
     <div class="header-content container">
         <div class="content">
             <h1></h1>
@@ -30,7 +30,7 @@
 
     <header>
         <h2 class="logo">Venationes</h2>
-		<h2 class="logo"> Lista de Grupos </h2>
+        
         <nav class="navegacion">
             <a href="indexP.html">Inicio</a>
             <a href="servicios.html">Informacion</a>
@@ -39,8 +39,13 @@
 
         </nav>
     </header>
+    <br><h2 class="logo">Lista de Grupos</h2>
+    <br>
+    <form action="RegistroGrupo" method="GET">
+		<button type = "submit"> Mostrar Grupos</button>
+	</form>
     <section>
-	
+    
     </section>
 
 </body>

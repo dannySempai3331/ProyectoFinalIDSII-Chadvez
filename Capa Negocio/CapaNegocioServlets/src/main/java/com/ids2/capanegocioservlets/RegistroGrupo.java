@@ -57,7 +57,7 @@ public class RegistroGrupo extends HttpServlet {
 			}
 	}
   
-	
+	@Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Connection con;
 		GrupoDao dao;
@@ -65,7 +65,7 @@ public class RegistroGrupo extends HttpServlet {
 		List<Grupo> grupos;
 		PrintWriter salida;
     	salida=resp.getWriter();
-		
+    	//HttpSession sesion = req.getSession();
 		PreparedStatement statment;
 		String query ="SELECT *FROM GRUPOS;";
 		String query2 = "SELECT *FROM EQUIPOS WHERE IDGRUPO =1 ORDER BY PUNTAJE DESC ; ";
@@ -79,11 +79,10 @@ public class RegistroGrupo extends HttpServlet {
 			grupos =dao.getAllGroups();
 			for(Grupo g:grupos) {
 				salida.print(g.toString());
+				//sesion.setAttribute("Lista de Grupos",g);
 			}
 			//List<GrupoDaoImp> getAllG = new ArrayList();
-			
-			//HttpSession sesion = req.getSession();
-			//sesion.setAttribute("Lista de Grupos", getAllG);
+		
 			resp.sendRedirect("rol.jsp");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -98,8 +97,9 @@ public class RegistroGrupo extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		GrupoDaoImp dao;
+		/*GrupoDaoImp dao;
 		Connection con;
 		String id;
 		String nombre;
@@ -115,12 +115,12 @@ public class RegistroGrupo extends HttpServlet {
 			grupo.setIdGrupo(Integer.parseInt(id));
 			grupo.setNombre(nombre);
 			dao.createGrupo(grupo);
-			response.sendRedirect("altaGrupo.html");
+			response.sendRedirect("rol.jsp");
 			}catch(Exception e) {
 				e.printStackTrace();
-			}
+			}*/
 		
-		//doGet(request, response);
+		doGet(request, response);
 	}
 
 }
