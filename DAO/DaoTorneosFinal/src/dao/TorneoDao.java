@@ -5,6 +5,19 @@ import dtos.Torneo;
 import java.time.LocalDate;
 import java.util.List;
 
+/*
+Elaborado por:
+Andy Gerald San Juan Martinez
+
+Valeria Itzel Contreras Miranda
+
+Jose Alejandro Terraza Gonzalez
+
+Brayan Enrique Hernandez Flores
+
+José Daniel Pérez Mejía
+*/
+
 public interface TorneoDao {
 
     //obtener todos los torneos
@@ -17,20 +30,5 @@ public interface TorneoDao {
     boolean deleteTorneo(Torneo torneo);
     //obtener por id
     Torneo getById(int id);
-
-
-    /*
-    //obtener por noCuenta
-    Torneo getByNoCuenta(String noCuenta);
-    //obtener los datos personales
-    Torneo getPersonalData(int id);
-    //obtener el id segun el numero de cuenta
-    int getIdByNoCuenta(String noCuenta);
-    LocalDate getFechaNacimiento(int id); */
-
-
-
-
-
 
 }

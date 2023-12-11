@@ -11,6 +11,20 @@ import dao.EquipoDao;
 import dtos.Equipo;
 import errores.PersistenciaException;
 
+/*
+Elaborado por:
+
+Andy Gerald San Juan Martinez
+
+Valeria Itzel Contreras Miranda
+
+Jose Alejandro Terraza Gonzalez
+
+Brayan Enrique Hernandez Flores
+
+José Daniel Pérez Mejía
+*/
+
 public class EquipoDaoImp implements EquipoDao {
 
     private Connection connection;
@@ -75,7 +89,6 @@ public class EquipoDaoImp implements EquipoDao {
     @Override
     public Equipo modifyEquipo(dtos.Equipo equipo) {
         try {
-            // Construir la consulta SQL según los campos no nulos proporcionados
             StringBuilder queryBuilder = new StringBuilder("UPDATE equipos SET");
             List<Object> params = new ArrayList<>();
 
@@ -96,25 +109,19 @@ public class EquipoDaoImp implements EquipoDao {
                 params.add(equipo.getIdGrupo());
             }
 
-            // Eliminar la última coma si hay campos a actualizar
             if (params.size() > 0) {
                 queryBuilder.deleteCharAt(queryBuilder.length() - 1);
             }
 
-            // Agregar la condición WHERE
             queryBuilder.append(" WHERE idEquipo=?");
             params.add(equipo.getIdEquipo());
 
-            // Crear la consulta final
             String query = queryBuilder.toString();
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                // Establecer los valores de los parámetros
                 for (int i = 0; i < params.size(); i++) {
                     preparedStatement.setObject(i + 1, params.get(i));
                 }
-
-                // Ejecutar la consulta
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {

@@ -22,6 +22,19 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+/*
+Elaborado por:
+Andy Gerald San Juan Martinez
+
+Valeria Itzel Contreras Miranda
+
+Jose Alejandro Terraza Gonzalez
+
+Brayan Enrique Hernandez Flores
+
+José Daniel Pérez Mejía
+*/
+
 /**
  * Servlet implementation class RegistroGrupo
  */

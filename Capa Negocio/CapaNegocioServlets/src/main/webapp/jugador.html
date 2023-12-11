@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/852d701f33.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="style.css">
+    <title> Jugador</title>
+
+    <div class="header-content container">
+        <div class="content">
+            <h1>Equipo.</h1>
+
+            <p></p>
+            <p>
+                Consulta tu informacion sobre tu equipo
+            </p>
+            <a href="#" class="btn-1">Mas información</a>
+
+
+        </div>
+        <img src="images/fondo_.png" alt="">
+    </div>
+</head>
+
+<body>
+    <header>
+
+        <h2 class="logo">Venationes</h2>
+
+        <nav class="navegacion">
+            <a href="indexP.html">Inicio</a>
+            <a href="servicios.html">Informacion</a>
+            <a href="rol.html">Rol de juego</a>
+            <a href="equipos.html">Equipos</a>
+
+            <button class="btn" onclick="cerrarSesion()">Salir</button> </header>
+</body>
+
+<script>
+    // Función para cerrar la sesión
+    function cerrarSesion() {
+        localStorage.removeItem('usuario');
+        window.location.href = 'indexP.html';
+    }
+</script>
+
+</html>

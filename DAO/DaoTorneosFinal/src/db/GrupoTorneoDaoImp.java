@@ -11,6 +11,19 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+Elaborado por:
+Andy Gerald San Juan Martinez
+
+Valeria Itzel Contreras Miranda
+
+Jose Alejandro Terraza Gonzalez
+
+Brayan Enrique Hernandez Flores
+
+José Daniel Pérez Mejía
+*/
+
 public class GrupoTorneoDaoImp implements GruposTorneosDao {
     private Connection connection;
 

@@ -4,6 +4,19 @@ import dtos.Grupo;
 
 import java.util.List;
 
+/*
+Elaborado por:
+Andy Gerald San Juan Martinez
+
+Valeria Itzel Contreras Miranda
+
+Jose Alejandro Terraza Gonzalez
+
+Brayan Enrique Hernandez Flores
+
+José Daniel Pérez Mejía
+*/
+
 public interface GrupoDao {
     //Lista de todos los grupos
     List<Grupo> getAllGroups();

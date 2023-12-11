@@ -53,17 +53,12 @@ public class Main {
            connection = DriverManager.getConnection(url,user,password);
             //Derby
             //connection=DriverManager.getConnection(url)
+           usuarioDaoImp.setConnection(connection);
+           Usuario u = new Usuario();
+           u.setCorreo("maria.lopez@example.com");
+           u.setContrasenna("654321");
 
-           EquipoDaoImp edi = new EquipoDaoImp();
-           edi.setConnection(connection);
-
-           Equipo e = new Equipo();
-           e.setNombre("Los insanos Recargado");
-           e.setIdEquipo(2);
-           e.setPuntaje(10);
-           e.setNoJugadores(10);
-
-           System.out.println(edi.getEquipoById(5));
+            System.out.println(usuarioDaoImp.getDataForLogIn(u));
 
         } catch (Exception e) {
             throw new RuntimeException(e);

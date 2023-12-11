@@ -11,6 +11,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+Elaborado por:
+Andy Gerald San Juan Martinez
+
+Valeria Itzel Contreras Miranda
+
+Jose Alejandro Terraza Gonzalez
+
+Brayan Enrique Hernandez Flores
+
+José Daniel Pérez Mejía
+*/
+
 public class GrupoDaoImp implements GrupoDao {
     private Connection connection;
 
