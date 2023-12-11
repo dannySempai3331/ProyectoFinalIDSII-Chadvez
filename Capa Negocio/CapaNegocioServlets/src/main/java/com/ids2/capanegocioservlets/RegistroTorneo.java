@@ -10,6 +10,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -31,6 +36,7 @@ José Daniel Pérez Mejía
 /**
  * Servlet implementation class RegistroTorneo
  */
+@WebServlet(value = "/registroTorneo")
 public class RegistroTorneo extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private DataSource ds;
@@ -62,12 +68,13 @@ public class RegistroTorneo extends HttpServlet {
         String disciplina;
         String noEquipos;
         String noGrupos;
-        String porcentajeavance;
+        String fechaInicio;
+        String fechaFin;
 
 
         Torneo torneo;
         try {
-            con=this.ds.getConnection();
+            con = this.ds.getConnection();
             dao = new TorneoDaoImp();
             dao.setConnection(con);
 
@@ -75,39 +82,32 @@ public class RegistroTorneo extends HttpServlet {
             disciplina = request.getParameter("disciplina");
             noEquipos = request.getParameter("noequipos");
             noGrupos = request.getParameter("nogrupos");
-            porcentajeavance = request.getParameter("porcentajeavance");
-            fechaInicio = request.getParameter("fechainicio");
+
+            fechaInicio = request.getParameter("fechaInicio");
             Date fechaDate = sdf.parse(fechaInicio);
             Instant instant = fechaDate.toInstant();
-            LocalDate fechaInicio = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate fechaInc = instant.atZone(ZoneId.systemDefault()).toLocalDate();
 
-            fechaFin = request.getParameter("fechafin");
-            Date fechaDate = sdf.parse(fechaFin);
-            Instant instant = fechaDate.toInstant();
-            LocalDate fechaFin = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-
-
-
-
+            fechaFin = request.getParameter("fechaFin");
+            Date fechaD = sdf.parse(fechaFin);
+            Instant instant1 = fechaD.toInstant();
+            LocalDate fechaF = instant1.atZone(ZoneId.systemDefault()).toLocalDate();
 
             torneo = new Torneo();
-
-<<<<<<< HEAD
             torneo.setNombre(nombre);
             torneo.setDisciplina(disciplina);
             torneo.setNoEquipos(Integer.parseInt(noEquipos));
             torneo.setNoGrupos(Integer.parseInt(noGrupos));
-            torneo.setPorcentajeAvance(Double.parseDouble(porcentajeavance));
-            torneo.setFechaInicio(fechaInicio);
-            torneo.setFechaFin(fechaFin);
+            torneo.setPorcentajeAvance(0.0);
+            torneo.setFechaInicio(fechaInc);
+            torneo.setFechaFin(fechaF);
 
-=======
             //torneo.setIdTorneo(Integer.parseInt(idTorneo));
             torneo.setNombre(nombre);
             //torneo.set
->>>>>>> 2bdadb76014c2a515603d0603200a870cfed91a0
+
             dao.createTorneo(torneo);
-            response.sendRedirect("torneosregistro.html");
+            response.sendRedirect("admin.html");
         }catch(Exception e) {
             e.printStackTrace();
         }
