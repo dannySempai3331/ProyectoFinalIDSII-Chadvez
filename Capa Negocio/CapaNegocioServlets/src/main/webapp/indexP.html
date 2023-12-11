@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viweport" content="width=device-widht, initial">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/852d701f33.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <title> Login & Registro</title>
+
+    <div class="header-content container">
+        <div class="content">
+            <h1>Torneos.</h1>
+            <p>
+                elije y apoya a tu equipo favorito
+            </p>
+
+        </div>
+        <img src="images/fondo.png" alt="">
+    </div>
+</head>
+
+<body>
+
+    <header>
+        <h2 class="logo">Venationes</h2>
+
+        <nav class="navegacion">
+            <a href="indexP.html">Inicio</a>
+            <a href="servicios.html">Informacion</a>
+            <a href="rol.html">Rol de juego</a>
+            <a href="equipos.html">Equipos</a>
+
+            <button class="btn">Iniciar Sesión</button>
+        </nav>
+    </header>
+    <section>
+        <div class="fondo">
+            <span class="icono-cerrar"><i class="fa-solid fa-xmark"></i></span>
+
+            <div class="contenedor-form login">
+                <h2>Iniciar Sesión</h2>
+                <form action="#">
+                    <div class="contenedor-input">
+                        <span class="icono"><i class="fa-solid fa-envelope"></i></span>
+                        <input type="email" required>
+                        <label for="#">Email</label>
+                    </div>
+                    <div class="contenedor-input">
+                        <span class="icono"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" required>
+                        <label for="#">Contraseña</label>
+                    </div>
+
+                    <div class="recordar">
+                        <label for="#"><input type="checkbox">Recordar Sesión</label>
+                        <a href="#">¿Olvidé la contraseña?</a>
+                    </div>
+
+                    <button type="submit" class="btn">Iniciar Sesión</button>
+
+                    <div class="registrar">
+                        <p>¿No tienes cuenta?
+                            <a href="#" class="registrar-link">Registrarse</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+            <div class="contenedor-form registrar">
+                <h2>Registrarse</h2>
+                <form action="#">
+                    <div class="contenedor-input">
+                        <span class="icono"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" required>
+                        <label for="#">Nombre de Usuario</label>
+                    </div>
+
+                    <div class="contenedor-input">
+                        <span class="icono"><i class="fa-solid fa-envelope"></i></span>
+                        <input type="email" required>
+                        <label for="#">Email</label>
+                    </div>
+                    <div class="contenedor-input">
+                        <span class="icono"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" required>
+                        <label for="#">Contraseña</label>
+                    </div>
+
+                    <div class="recordar">
+                        <label for="#"><input type="checkbox">Acepto los terminos y condiciones</label>
+                    </div>
+                    <button type="submit" class="btn">Registrarme</button>
+
+                    <div class="registrar">
+                        <p>¿Tienes cuenta?
+                            <a href="#" class="login-link">Iniciar Sesión</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+            <script src="app.js"></script>
+        </div>
+    </section>
+
+</body>
+
+</html>
