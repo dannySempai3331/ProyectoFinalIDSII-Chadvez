@@ -81,10 +81,10 @@ public class LogIn extends HttpServlet {
                     resp.sendRedirect("jugador.html");
                     break;
                 case "admin":
-                    resp.sendRedirect("admin.jsp");
+                    resp.sendRedirect("admin.html");
                     break;
                 case "juez":
-                    resp.sendRedirect("juez.jsp");
+                    resp.sendRedirect("juez.html");
                     break;
                 default:
                     resp.sendRedirect("index.html");
