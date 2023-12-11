@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/852d701f33.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="styleAd.css">
+    <title>Admin</title>
+
+    <div class="header-content container">
+        <div class="content">
+            <h1>Administrador.</h1>
+            <p>TORNEO</p>
+            <a href="#" class="btn-1">crear torneo.</a>
+            <a href="#" class="btn-1">eliminar torneo.</a>
+            <a href="#" class="btn-1">informacion general.</a>
+            <a href="#" class="btn-1">cancelar torneo.</a>
+            <p>GRUPOS</p>
+            <a href="#" class="btn-1">Crear grupo.</a>
+            <a href="#" class="btn-1">modificar grupo.</a>
+            <a href="#" class="btn-1">eliminar grupo.</a>
+            <p>ROL DE JUEGOS</p>
+            <a href="#" class="btn-1">Crear rol.</a>
+            <a href="#" class="btn-1">modificar rol.</a>
+            <a href="#" class="btn-1">eliminar rol.</a>
+            <p>SOLICITUDES</p>
+            <a href="#" class="btn-1">Cambio de equipo.</a>
+            <a href="#" class="btn-1">cambio de capitan.</a>
+
+        </div>
+        <img src="images/fondo_.png" alt="">
+    </div>
+</head>
+
+<body>
+    <header>
+        <h2 class="logo">Venationes</h2>
+
+        <nav class="navegacion">
+            <a href="indexP.html">Inicio</a>
+            <a href="servicios.html">Informacion</a>
+            <a href="rol.html">Rol de juego</a>
+            <a href="equipos.html">Equipos</a>
+
+            <button class="btn" onclick="cerrarSesion()">Salir</button>
+        </nav>
+    </header>
+
+    <section>
+        <div class="fondo">
+            <span class="icono-cerrar"><i class="fa-solid fa-xmark"></i></span>
+
+            <div class="contenedor-form login">
+                <h2>INFO ADMIN Y SOLITUD</h2>
+                <form action="#">
+
+                </form>
+            </div>
+            <div class="contenedor-form registrar">
+                <h2>Registrarse</h2>
+                <form action="#">
+
+                </form>
+            </div>
+            <script src="app.js"></script>
+        </div>
+    </section>
+</body>
+
+<script>
+    // Función para cerrar la sesión
+    function cerrarSesion() {
+        localStorage.removeItem('usuario');
+        window.location.href = 'indexP.html';
+    }
+</script>
+
+</html>

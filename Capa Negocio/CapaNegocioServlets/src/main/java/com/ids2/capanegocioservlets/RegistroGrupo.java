@@ -37,9 +37,6 @@ Brayan Enrique Hernandez Flores
 José Daniel Pérez Mejía
 */
 
-/**
- * Servlet implementation class RegistroGrupo
- */
 public class RegistroGrupo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private DataSource ds;
