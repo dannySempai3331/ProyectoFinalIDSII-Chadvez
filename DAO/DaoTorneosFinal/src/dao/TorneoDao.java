@@ -20,15 +20,10 @@ José Daniel Pérez Mejía
 
 public interface TorneoDao {
 
-    //obtener todos los torneos
     List<Torneo> getAllUsers();
-    //crear un torneo
     boolean createTorneo(Torneo torneo);
-    //modificar info de un torneo
     boolean modifyTorneo(Torneo torneo);
-    //eliminar torneo
     boolean deleteTorneo(Torneo torneo);
-    //obtener por id
     Torneo getById(int id);
 
 }

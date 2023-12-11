@@ -19,6 +19,5 @@ José Daniel Pérez Mejía
 
 public interface GruposTorneosDao {
 
-    //Obtener todos los grupos y torneos
     List<GruposTorneos> getGrupoTorneo();
 }

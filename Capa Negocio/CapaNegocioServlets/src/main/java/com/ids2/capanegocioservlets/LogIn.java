@@ -74,8 +74,6 @@ public class LogIn extends HttpServlet {
 
             usuario2 = udi.getDataForLogIn(usuario1);
 
-            //Switch case para verificar si el tipo de usuario es un jugador, admin o juez
-
             switch (usuario2.getTipoUsuario()) {
                 case "jugador":
                     resp.sendRedirect("jugador.html");
@@ -94,9 +92,7 @@ public class LogIn extends HttpServlet {
         } catch (Exception e) {
             throw new ServletException(e.getMessage());
         }
-
     }
-
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doGet(req,resp);
     }

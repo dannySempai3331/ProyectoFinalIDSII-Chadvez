@@ -68,7 +68,6 @@ public class SignUp extends HttpServlet {
 
         try {
             c = this.ds.getConnection();
-            //response.getWriter().append("Served at: ").append(c.toString());
             udi.setConnection(c);
             usuario.setNoCuenta(request.getParameter("noCuenta"));
             usuario.setNombre(request.getParameter("nombre"));
