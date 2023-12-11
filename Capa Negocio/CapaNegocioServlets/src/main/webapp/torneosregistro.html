@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/852d701f33.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="styleAd.css">
+    <title>Admin</title>
+
+
+</head>
+
+<body>
+<header>
+    <h2 class="logo">Venationes</h2>
+</header>
+
+<section>
+
+        <div class="contenedor-form login">
+
+            <h2>Registrar</h2>
+
+            <form action="signup" method="post">
+                <div class="contenedor-input">
+                    <span class="icono"><i class="fa-solid fa-user"></i></span>
+                    <input type="text" id="nombre" name="nombre" >
+                    <label for="nombre">Nombre</label>
+                </div>
+
+                <div class="contenedor-input">
+                    <span class="icono"><i class="fa-solid fa-user"></i></span>
+                    <input type="text" id="disciplina" name="disciplina" >
+                    <label for="disciplina">Disciplina</label>
+                </div>
+
+                <div class="contenedor-input">
+                    <span class="icono"><i class="fa-solid fa-user"></i></span>
+                    <input type="text" id="noequipos" name="noequipos" >
+                    <label for="noequipos">Número de Equipos </label>
+                </div>
+
+                <div class="contenedor-input">
+                    <span class="icono"><i class="fa-solid fa-user"></i></span>
+                    <input type="text" id="nogrupos" name="nogrupos" >
+                    <label for="nogrupos">Número de Grupos </label>
+                </div>
+
+                <div class="contenedor-input">
+                    <span class="icono"><i class="fa-solid fa-user"></i></span>
+                    <input type="date" id="fechaInicio" name="fechaInicio" >
+                    <label for="fechaInicio">Fecha de Inicio </label>
+                </div>
+
+                <div class="contenedor-input">
+                    <span class="icono"><i class="fa-solid fa-user"></i></span>
+                    <input type="date" id="fechaFin" name="fechaFin">
+                    <label for="fechaFin">Fecha de Finalizacion </label>
+                </div>
+
+
+                <button type="submit" class="btn">Crear torneo</button>
+
+                <div class="registrar">
+                    <a href="admin.html" class="btn-1">Regresar.</a>
+                    <a href="torneosregistro.html" class="btn-1">registrar un nuevo torneo</a>
+                </div>
+            </form>
+        </div>
+        <script src="app.js"></script>
+    </div>
+</section>
+
+</body>
+
+<script>
+    // Función para cerrar la sesión
+    function cerrarSesion() {
+        localStorage.removeItem('usuario');
+        window.location.href = 'indexP.html';
+    }
+</script>
+
+</html>
