@@ -8,8 +8,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -37,6 +44,35 @@ public class RegistroGrupo extends HttpServlet {
 				
 			}
 	}
+  
+	
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		Connection con;
+		GrupoDaoImp dao;
+		PreparedStatement statment;
+		String query ="SELECT *FROM GRUPOS;";
+		String query2 = "SELECT *FROM EQUIPOS WHERE IDGRUPO =1 ORDER BY PUNTAJE DESC ; ";
+    	
+		try {
+			con = this.ds.getConnection();
+			dao = new GrupoDaoImp();
+			dao.setConnection(con);
+			dao.getAllGroups();
+			List<GrupoDaoImp> getAllG = new ArrayList();
+			
+			HttpSession sesion = req.getSession();
+			sesion.setAttribute("Lista de Grupos", getAllG);
+			resp.sendRedirect("rol.jsp");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		PrintWriter salida;
+    	salida=resp.getWriter();
+    	
+    	
+		//super.doGet(req, resp);
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -54,14 +90,14 @@ public class RegistroGrupo extends HttpServlet {
 			 id=request.getParameter("idgrupo");
 			 nombre = request.getParameter("nombregrupo");
 		
-		grupo = new Grupo();
-		grupo.setIdGrupo(Integer.parseInt(id));
-		grupo.setNombre(nombre);
-		dao.createGrupo(grupo);
-		response.sendRedirect("altaGrupo.html");
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+			grupo = new Grupo();
+			grupo.setIdGrupo(Integer.parseInt(id));
+			grupo.setNombre(nombre);
+			dao.createGrupo(grupo);
+			response.sendRedirect("altaGrupo.html");
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		
 		//doGet(request, response);
 	}
